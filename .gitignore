@@ -1,0 +1,5 @@
+node_modules
+bot
+
+yarn.lock
+.eslintrc.json
