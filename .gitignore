@@ -1,5 +1,9 @@
+# folders
 node_modules
-bot
+bulid
+ref
 
+# files
 yarn.lock
 .eslintrc.json
+.env
