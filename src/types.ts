@@ -9,30 +9,10 @@ export interface MystatResponse {
     data: any[];
 }
 
-export class UserSession {
-    private userData: IUserData;
-
-    constructor() {
-        this.userData = { username: '', password: '' };
-    }
-
-    get UserData(): IUserData {
-        return this.userData;
-    }
-
-    set username(value: string) {
-        this.userData.username = value;
-    }
-
-    set password(value: string) {
-        this.userData.password = value;
-    }
-
-    get username(): string {
-        return this.userData.username;
-    }
-
-    get password(): string {
-        return this.userData.password;
-    }
+export enum HomeworkStatus {
+    Overdue,
+    Checked,
+    Uploaded,
+    Active,
+    Deleted = 5
 }

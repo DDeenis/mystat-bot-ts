@@ -1,5 +1,4 @@
 import { Scenes, session, Telegraf } from 'telegraf';
-import { UserSession } from './types.js';
 import dotenv from "dotenv";
 import scenes from './scenes.js';
 import loginMiddleware from './middleware/login.js';
@@ -13,7 +12,6 @@ if (!token) {
     throw new Error('Bot token is not provided');
 }
 
-const userSession = new UserSession();
 const loginScene = scenes.login;
 
 const stage = new Scenes.Stage<Scenes.WizardContext>([loginScene], { ttl: 360 });
