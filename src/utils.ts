@@ -7,7 +7,15 @@ export function getUserDataFromSession(ctx: any): IUserData {
     }
 }
 
-export function formatMessage(...parts: string[]) {
+export function setSessionValue<T>(ctx: any, fieldName: string, value: T | null): void {
+    ctx.session[fieldName] = value;
+}
+
+export function getSessionValue<T>(ctx: any, fieldName: string): T | null {
+    return ctx.session[fieldName] as T | null;
+}
+
+export function formatMessage(...parts: string[]): string {
     return [
         ...parts,
         '\n'
