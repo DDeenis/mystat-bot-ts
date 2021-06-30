@@ -42,14 +42,14 @@ function getHomeworkStatusByMatch(match: string): number {
     }
 }
 
-async function getHomeworksByMatch(ctx: any): Promise<string[]> {
+async function getHomeworksByMatch(ctx: any): Promise<any[]> {
     const match: string = ctx.match[1];
     const homeworkStatus = getHomeworkStatusByMatch(match);
     const homeworks = await getHomeworkList(getUserDataFromSession(ctx), homeworkStatus);
-    const data = homeworks.success ? homeworks.data.map(h => h.name_spec.slice(0, 12) + '…') : [];
+    // const data = homeworks.success ? homeworks.data.map(h => h.name_spec.slice(0, 12) + '…') : [];
     setSessionValue<unknown[]>(ctx, 'homeworks', homeworks.data);
 
-    return data;
+    return homeworks.data;
 }
 
 const selectedHomeworkSubmenu = new MenuTemplate<Context>((ctx) => {
@@ -64,20 +64,18 @@ const selectedHomeworkListSubmenu = new MenuTemplate<Context>((ctx) => ctx.match
 // selectedHomeworkListSubmenu.chooseIntoSubmenu('hl', async (ctx) => await getHomeworksByMatch(ctx), selectedHomeworkSubmenu, { columns: 2 });
 
 selectedHomeworkListSubmenu.manualRow(async (ctx: Context) => {
-    const titles = await getHomeworksByMatch(ctx);
-    const homeworks = getSessionValue<any[]>(ctx, 'homeworks');
+    const homeworks = await getHomeworksByMatch(ctx);
 
-    return [homeworks!.slice(0, 3).map(h => ({
+    return [homeworks.slice(0, 3).map(h => ({
         text: h.name_spec,
         relativePath: 'hl:' + h.id
     }))];
 });
 
 selectedHomeworkListSubmenu.manualRow(async (ctx: Context) => {
-    const titles = await getHomeworksByMatch(ctx);
-    const homeworks = getSessionValue<any[]>(ctx, 'homeworks');
+    const homeworks = await getHomeworksByMatch(ctx);
 
-    return [homeworks!.slice(3, homeworks?.length).map(h => ({
+    return [homeworks.slice(3, homeworks?.length).map(h => ({
         text: h.name_spec,
         relativePath: 'hl:' + h.id,
     }))];

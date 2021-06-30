@@ -7,12 +7,12 @@ export function getUserDataFromSession(ctx: any): IUserData {
     }
 }
 
-export function setSessionValue<T>(ctx: any, fieldName: string, value: T | null): void {
+export function setSessionValue<T>(ctx: any, fieldName: string, value: T): void {
     ctx.session[fieldName] = value;
 }
 
-export function getSessionValue<T>(ctx: any, fieldName: string): T | null {
-    return ctx.session[fieldName] as T | null;
+export function getSessionValue<T>(ctx: any, fieldName: string): T {
+    return ctx.session[fieldName] as T;
 }
 
 export function formatMessage(...parts: string[]): string {
