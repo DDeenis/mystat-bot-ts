@@ -4,7 +4,6 @@ import scenes from './scenes.js';
 import loginMiddleware from './middleware/login.js';
 import menuMiddleware from './middleware/menu.js';
 import { connectMongo } from './database/database.js';
-import { UserModel } from './database/entity/User.js';
 
 dotenv.config();
 

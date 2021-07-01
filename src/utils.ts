@@ -8,6 +8,11 @@ export function getUserDataFromSession(ctx: Context): IUserData {
     }
 }
 
+export function setUserDataToSession(ctx: Context, userData: IUserData): void {
+    setSessionValue<string>(ctx, 'username', userData.username);
+    setSessionValue<string>(ctx, 'password', userData.password);
+}
+
 export function setSessionValue<T>(ctx: Context, fieldName: string, value: T): void {
     ctx.session[fieldName] = value;
 }
