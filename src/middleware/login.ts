@@ -5,7 +5,7 @@ const loginMenuTemplate = new MenuTemplate((ctx: Context) => `Здравству
 
 loginMenuTemplate.interact('Войти в mystat', 'login-btn', {
     do: async (ctx) => {
-        ctx.scene.enter('login');
+        await ctx.scene.enter('login');
 
         return false;
     },
