@@ -47,7 +47,7 @@ async function getHomeworksByMatch(ctx: Context): Promise<unknown[]> {
     const homeworkStatus = getHomeworkStatusByMatch(match);
     const homeworks = await getHomeworkList(getUserDataFromSession(ctx), homeworkStatus);
     setSessionValue<unknown[]>(ctx, 'homeworks', homeworks.data);
-
+    
     return homeworks.data;
 }
 
@@ -74,12 +74,12 @@ selectedHomeworkListSubmenu.manualRow(async (ctx: Context) => {
     ];
 });
 
-selectedHomeworkListSubmenu.manualAction(/hl:(\d+)$/, async (ctx: Context, path: string) => {
+selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, path: string) => {
     const parts: string[] = path.split(':');
     const id: number = parseInt(parts[parts.length - 1]);
     const homework = getSessionValue<any[]>(ctx, 'homeworks')?.find(h => h.id === id);
 
-    await ctx.editMessageText(
+    await ctx.reply(
         formatMessage(
             `✏️ Предмет: ${homework.name_spec}`,
             `📖 Тема: ${homework.theme}`,
@@ -87,15 +87,14 @@ selectedHomeworkListSubmenu.manualAction(/hl:(\d+)$/, async (ctx: Context, path:
             `📅 Дата выдачи: ${homework.creation_time}`,
             `❕ Сдать до: ${homework.completion_time}`,
             `✒️ Комментарий: ${homework.comment}`,
-            `📁 Путь к файлу: ${homework.file_path}`,
-            `📂 Путь к загруженному файлу: ${homework.homework_stud.file_path}`,
+            `📁 Путь к файлу: [ссылка](${homework.file_path})`,
+            `📂 Путь к загруженному файлу: [ссылка](${homework.homework_stud.file_path})`,
             `✅ Проверенно: ${homework.homework_stud.creation_time}`,
             `🎉 Оценка: ${homework.homework_stud.mark}`
-        )
+        ),
+        { parse_mode: 'Markdown' }
     );
 
-    setTimeout(() => selectedHomeworkListSubmenu.renderBody(ctx, 'menu/hw/'), 2000);
-    
     return '.';
 });
 

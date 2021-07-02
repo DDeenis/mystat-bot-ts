@@ -1,5 +1,4 @@
-import pkg from 'mongoose';
-const { model, Schema } = pkg;
+import mongoose from 'mongoose';
 
 export interface IUser {
     username: string;
@@ -7,10 +6,10 @@ export interface IUser {
     chatId: number;
 }
 
-const userSchema = new Schema<IUser>({
+const userSchema = new mongoose.Schema<IUser>({
     username: { type: String, required: true },
     password: { type: String, required: true },
     chatId: { type: Number, required: true, unique: true }
 });
 
-export const UserModel = model<IUser>('User', userSchema);
+export const UserModel = mongoose.model<IUser>('User', userSchema);

@@ -19,7 +19,6 @@ if (!connectionString) {
 }
 
 await connectMongo(connectionString);
-
 const loginScene = scenes.login;
 
 const stage = new Scenes.Stage<Scenes.WizardContext>([loginScene], { ttl: 360 });
@@ -30,8 +29,8 @@ bot.use(stage.middleware());
 bot.use(loginMiddleware);
 bot.use(menuMiddleware);
 
-bot.command('login', (ctx) => loginMiddleware.replyToContext(ctx));
-bot.command('menu', (ctx) => menuMiddleware.replyToContext(ctx));
+bot.command('login', async (ctx) => await loginMiddleware.replyToContext(ctx));
+bot.command('menu', async (ctx) => await menuMiddleware.replyToContext(ctx));
 
 bot.launch()
 

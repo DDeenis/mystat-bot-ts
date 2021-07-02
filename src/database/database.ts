@@ -9,26 +9,27 @@ export const connectMongo = async (connectionString: string): Promise<void> => {
                 useCreateIndex: true,
                 keepAlive: true,
                 useUnifiedTopology: true,
-                useNewUrlParser: true
+                useNewUrlParser: true,
+                useFindAndModify: true
             },
             () => console.log("Mongoose is connected")
         )
     } catch (error) {
         console.log('Failed to connect mongoose', error);
     }
-
-    
 }
 
 export const createUser = async (user: IUser): Promise<void> => {
     try {
-        const newUser = new UserModel(user);
-        await newUser.save();
+        await UserModel.findOneAndUpdate({ chatId: user.chatId }, user, { upsert: true }, (err) => {
+            if (err) {
+                console.log('Error while creating/updating user: ' + err);
+            } else {
+                console.log('User created/updates successfully');
+            }
+        })
     } catch (error) {
         console.log(error);
-    } finally {
-        // ???
-        // mongoose.connection.close();
     }
 }
 
