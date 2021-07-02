@@ -1,7 +1,7 @@
 import { deunionize, Scenes } from "telegraf";
 import { authUser} from "mystat-api"
 import { getUserDataFromSession } from "./utils.js";
-import { createUser, isUserExist } from "./database/database.js";
+import { createUser } from "./database/database.js";
 import { IUserData } from "./types.js";
 
 const loginScene = new Scenes.WizardScene<Scenes.WizardContext>(

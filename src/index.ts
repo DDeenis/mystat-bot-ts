@@ -4,6 +4,7 @@ import scenes from './scenes.js';
 import loginMiddleware from './middleware/login.js';
 import menuMiddleware from './middleware/menu.js';
 import { connectMongo } from './database/database.js';
+import { setUserIfExist } from './utils.js';
 
 dotenv.config();
 
@@ -24,8 +25,14 @@ const loginScene = scenes.login;
 const stage = new Scenes.Stage<Scenes.WizardContext>([loginScene], { ttl: 360 });
 const bot = new Telegraf<Scenes.WizardContext>(token);
 
+
+
 bot.use(session());
 bot.use(stage.middleware());
+bot.use(async (ctx, next) => {
+    await setUserIfExist(ctx);
+    await next();
+});
 bot.use(loginMiddleware);
 bot.use(menuMiddleware);
 

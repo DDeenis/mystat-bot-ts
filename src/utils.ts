@@ -1,10 +1,11 @@
 import { Context } from "vm";
+import { getUserByChatId } from "./database/database.js";
 import { IUserData } from "./types.js";
 
 export function getUserDataFromSession(ctx: Context): IUserData {
     return {
-        username: ctx.session.username as string,
-        password: ctx.session.password as string
+        username: ctx.session?.username as string,
+        password: ctx.session?.password as string
     }
 }
 
@@ -26,4 +27,24 @@ export function formatMessage(...parts: string[]): string {
         ...parts,
         '\n'
     ].join('\n');
+}
+
+export async function setUserIfExist(ctx: Context): Promise<string | undefined> {
+    const userData = getUserDataFromSession(ctx);
+    
+    if (userData.username && userData.password) {
+        return;
+    }
+
+    const chatId = ctx.chat?.id;
+
+    if (!chatId) {
+        return '🚫 Что-то пошло не так.';
+    }
+
+    const user = await getUserByChatId(chatId);
+
+    if (user) {
+        setUserDataToSession(ctx, user);
+    }
 }
