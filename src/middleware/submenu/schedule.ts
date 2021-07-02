@@ -36,12 +36,17 @@ const getScheduleFormatted = async (ctx: Context, title: string, day?: number): 
 
 const getDateString = (date: Date = new Date()) => date.toLocaleString().substring(3, 10);
 const daysInMonth = (year: number, month: number): number => new Date(year, month, 0).getDate();
-const getDaysArray = (date: Date): number[] => {
+const getDaysArray = (date: Date): string[] => {
+    const totalButtons = 35;
     const totalDays = daysInMonth(date.getFullYear(), date.getMonth() + 1);
-    const days: number[] = [];
+    const days: string[] = [];
 
-    for (let index = 0; index < totalDays; index++) {
-        days.push(index + 1);
+    for (let count = 0; count < totalDays; count++) {
+        days.push(String(count + 1));
+    }
+
+    for (let count = 0; count < totalButtons - totalDays; count++) {
+        days.push(' ');
     }
 
     return days;
