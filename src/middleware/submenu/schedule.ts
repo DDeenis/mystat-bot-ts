@@ -41,10 +41,12 @@ const getDaysArray = (date: Date): string[] => {
     const totalDays = daysInMonth(date.getFullYear(), date.getMonth() + 1);
     const days: string[] = [];
 
+    // actual buttons
     for (let count = 0; count < totalDays; count++) {
         days.push(String(count + 1));
     }
 
+    // empty buttons
     for (let count = 0; count < totalButtons - totalDays; count++) {
         days.push(' ');
     }
@@ -60,6 +62,11 @@ scheduleTomorrowSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад')
 
 const monthScheduleEntrySubmenu = new MenuTemplate<Context>(async (ctx) => {
     const day = ctx.match[1];
+
+    if (day === ' ') {
+        return '🎉 Нет пар';
+    }
+
     return await getScheduleFormatted(ctx, `Расписание на ${day}.${getDateString()}`, parseInt(day));
 });
 monthScheduleEntrySubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
