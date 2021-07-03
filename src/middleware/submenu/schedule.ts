@@ -21,10 +21,10 @@ const getScheduleFormatted = async (ctx: Context, title: string, day?: number): 
 
     for (const scheduleEntry of schedule.data) {
         scheduleFormatted += formatMessage(
-            `✏️ Предмет: ${scheduleEntry.subject_name}`,
-            `💡 Преподаватель: ${scheduleEntry.teacher_name}`,
-            `🗝 Аудитория: ${scheduleEntry.room_name}`,
-            `⏰ Время: ${scheduleEntry.started_at} - ${scheduleEntry.finished_at}`,
+            `✏️ Предмет: ${scheduleEntry?.subject_name}`,
+            `💡 Преподаватель: ${scheduleEntry?.teacher_name}`,
+            `🗝 Аудитория: ${scheduleEntry?.room_name}`,
+            `⏰ Время: ${scheduleEntry?.started_at} - ${scheduleEntry?.finished_at}`,
         );
     }
 
