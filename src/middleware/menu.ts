@@ -3,6 +3,7 @@ import { Context } from "vm";
 import allExamsSubmenu from "./submenu/allExams.js";
 import futureExamsSubmenu from "./submenu/futureExams.js";
 import homeworkSubmenu from "./submenu/homework.js";
+import newsSubmenu from "./submenu/news.js";
 import { monthScheduleSubmenu, scheduleTodaySubmenu, scheduleTomorrowSubmenu } from "./submenu/schedule.js";
 
 const menuTemplate = new MenuTemplate<Context>(() => 'Выберите действие');
@@ -13,6 +14,7 @@ menuTemplate.submenu('Расписание на месяц', 'schedule-month', m
 menuTemplate.submenu('Домашние задания', 'hw', homeworkSubmenu);
 menuTemplate.submenu('Будущие экзамены', 'future-exams', futureExamsSubmenu);
 menuTemplate.submenu('Все экзамены', 'all-exams', allExamsSubmenu);
+menuTemplate.submenu('Новости', 'news', newsSubmenu);
 
 const menuMiddleware = new MenuMiddleware('menu/', menuTemplate);
 

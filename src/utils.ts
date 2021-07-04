@@ -29,6 +29,8 @@ export function formatMessage(...parts: string[]): string {
     ].join('\n');
 }
 
+export const cropString = (source: string, end: number): string => source.substring(0, end) + '…';
+
 export async function setUserIfExist(ctx: Context): Promise<string | undefined> {
     const userData = getUserDataFromSession(ctx);
     
