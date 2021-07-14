@@ -38,8 +38,8 @@ const newsEntrySubmenu = new MenuTemplate<Context>(async (ctx: Context) => {
     }
 
     const newsEntryFormatted = formatMessage(
-        `✏️ Тема: ${newsEntry?.theme}\n`,
-        `📅 Дата: ${newsEntry?.time}\n`,
+        `✏️ Тема: ${newsEntry?.theme}`,
+        `📅 Дата: ${newsEntry?.time}`,
         removeHTMLFromNews((newsEntryDetails.data as any)?.text_bbs)
     );
 
