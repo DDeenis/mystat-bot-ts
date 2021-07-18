@@ -48,6 +48,7 @@ const loginScene = new Scenes.WizardScene<Scenes.WizardContext>(
             await ctx.reply('🔒 При входе возникла ошибка. Проверьте логин и пароль.');
         } else {
             await ctx.reply('🔓 Вход успешно выполнен');
+            await ctx.reply('Используйте /menu чтобы перейти в меню');
             await createUser({ username: userData.username, password: userData.password, chatId });
         }
 

@@ -34,7 +34,7 @@ const newsEntrySubmenu = new MenuTemplate<Context>(async (ctx: Context) => {
     const newsEntryDetails = await getNewsDetails(getUserDataFromSession(ctx), newsEntry.id_bbs);
 
     if (!newsEntry || !newsEntryDetails.success) {
-        return '🚫 При получении новостей возникла ошибка';
+        return '🚫 При получении новостей возникла ошибка: ' + newsEntryDetails.error;
     }
 
     const newsEntryFormatted = formatMessage(

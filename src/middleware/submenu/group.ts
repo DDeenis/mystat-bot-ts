@@ -32,14 +32,19 @@ const studentSubmenu = new MenuTemplate<Context>(async (ctx) => {
     const studentFormatted = formatMessage(
         `📝 Имя: ${student.full_name}`,
         `📊 Количество очков: ${student.amount}`,
-        `📱 Фото: ${student.photo_path}`,
+        `📱 Фото: [фото](${student.photo_path})`,
         `🔑 ID: ${student.id}`
     );
-
-    return [
+    
+    const text = [
         student.full_name,
         studentFormatted
     ].join('\n');
+
+    return {
+        text,
+        parse_mode: 'Markdown'
+    };
 });
 studentSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
 

@@ -25,8 +25,6 @@ const loginScene = scenes.login;
 const stage = new Scenes.Stage<Scenes.WizardContext>([loginScene], { ttl: 360 });
 const bot = new Telegraf<Scenes.WizardContext>(token);
 
-
-
 bot.use(session());
 bot.use(stage.middleware());
 bot.use(async (ctx, next) => {

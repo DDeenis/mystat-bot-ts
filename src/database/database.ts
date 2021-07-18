@@ -33,6 +33,14 @@ export const createUser = async (user: IUser): Promise<void> => {
     }
 }
 
+export const deleteUser = async (chatId: number): Promise<void> => {
+    try {
+        await UserModel.remove({ chatId });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getUserByChatId = async (chatId: number): Promise<IUser | undefined> => {
     return (await UserModel.findOne({ chatId }))?.toObject();
 }

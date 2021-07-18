@@ -7,7 +7,7 @@ const futureExamsSubmenu = new MenuTemplate<Context>(async (ctx) => {
     const futureExams = await getFutureExams(getUserDataFromSession(ctx));
 
     if (!futureExams.success) {
-        return '🚫 При получении расписания экзаменов возникла ошибка';
+        return '🚫 При получении расписания экзаменов возникла ошибка: ' + futureExams.error;
     } else if (futureExams.data.length === 0) {
         return '🎉 У вас нет назначеных экзаменов';
     }

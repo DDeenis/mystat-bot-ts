@@ -4,13 +4,14 @@ import { getHomeworkList } from "mystat-api";
 import { HomeworkStatus } from "../../types.js";
 import { formatMessage, getSessionValue, getUserDataFromSession, setSessionValue } from "../../utils.js";
 
-const HomeworkStatusTypes = Object.freeze({
-    Overdue: 'Просроченные',
-    Checked: 'Выполненные',
-    Uploaded: 'Загруженные',
-    Active: 'Текущие',
-    Deleted: 'Удаленные'
-});
+
+enum HomeworkStatusTypes {
+    Overdue = 'Просроченные',
+    Checked = 'Выполненные',
+    Uploaded = 'Загруженные',
+    Active = 'Текущие',
+    Deleted = 'Удаленные'
+}
 
 const homeworkStatusList = [
     HomeworkStatusTypes.Active,
@@ -94,6 +95,15 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
 
     return '.';
 });
+// pagination unfinished
+// selectedHomeworkListSubmenu.pagination('hw-pg', {
+//     setPage: (ctx, page) => {
+//         ctx.session.current = ++page || 1;
+//         ctx.session.total = 10;
+//     },
+//     getCurrentPage: (ctx) => ctx.session.current,
+//     getTotalPages: (ctx) => ctx.session.total,
+// });
 selectedHomeworkListSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
 
 const homeworkSubmenu = new MenuTemplate<Context>(() => 'Выберите тип домашнего задания');
