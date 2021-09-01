@@ -19,7 +19,7 @@ if (!connectionString) {
     throw new Error('MongoDB connection string is not provided');
 }
 
-await connectMongo(connectionString);
+(async () => await connectMongo(connectionString))()
 const loginScene = scenes.login;
 
 const stage = new Scenes.Stage<Scenes.WizardContext>([loginScene], { ttl: 360 });
