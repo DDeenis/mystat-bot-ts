@@ -22,6 +22,7 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
 
         (ctx.session as any).username = username;
 
+        ctx.deleteMessage(ctx.message?.message_id);
         await ctx.reply('🔑 Теперь оправьте свой пароль от mystat');
 
         return ctx.wizard.next();
@@ -35,6 +36,7 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
 
         (ctx.session as any).password = password;
 
+        ctx.deleteMessage(ctx.message?.message_id);
         ctx.reply('🔍 Обработка информации');
 
         const userData: IUserData = getUserDataFromSession(ctx);
