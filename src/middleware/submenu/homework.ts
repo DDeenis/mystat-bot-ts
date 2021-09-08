@@ -88,7 +88,7 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
             `❕ Сдать до: ${homework?.completion_time}`,
             `✒️ Комментарий: ${homework?.comment}`,
             `📁 Путь к файлу: [ссылка](${homework?.file_path})`,
-            `📂 Путь к загруженному файлу: [ссылка](${homework?.homework_stud.file_path})`,
+            `📂 Путь к загруженному файлу: [ссылка](${homework?.homework_stud?.file_path})`,
             `✅ Проверенно: ${homework?.homework_stud?.creation_time}`,
             `🎉 Оценка: ${homework?.homework_stud?.mark}`
         ),
