@@ -1,4 +1,6 @@
-import { MenuMiddleware, MenuTemplate } from "telegraf-inline-menu";
+import telegraf_inline from "telegraf-inline-menu";
+const MenuTemplate = telegraf_inline.MenuTemplate;
+const MenuMiddleware = telegraf_inline.MenuMiddleware;
 import { Context } from "vm";
 import { deleteUser } from "../database/database.js";
 import { setUserDataToSession } from "../utils.js";

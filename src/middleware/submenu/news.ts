@@ -1,5 +1,7 @@
 import { getNews, getNewsDetails } from "mystat-api";
-import { createBackMainMenuButtons, MenuTemplate } from "telegraf-inline-menu";
+import telegraf_inline from "telegraf-inline-menu";
+const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
+const MenuTemplate = telegraf_inline.MenuTemplate;
 import { Context } from "vm";
 import { cropString, formatMessage, getSessionValue, getUserDataFromSession, setSessionValue } from "../../utils.js";
 
