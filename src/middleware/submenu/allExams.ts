@@ -1,10 +1,10 @@
 import { getExams } from "mystat-api";
-import { Telegraf } from "telegraf";
 import telegraf_inline from "telegraf-inline-menu";
-const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
-const MenuTemplate = telegraf_inline.MenuTemplate;
 import { Context } from "vm";
 import { formatMessage, getSessionValue, getUserDataFromSession, setSessionValue } from "../../utils.js";
+
+const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
+const MenuTemplate = telegraf_inline.MenuTemplate;
 
 const getExamsList = async (ctx: Context): Promise<string[]> => {
     const exams = await getExams(getUserDataFromSession(ctx));

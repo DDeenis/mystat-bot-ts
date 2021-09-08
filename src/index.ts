@@ -1,6 +1,4 @@
 import Telegraf from 'telegraf';
-const Scenes = Telegraf.Scenes;
-const session = Telegraf.session;
 import dotenv from "dotenv";
 import scenes from './scenes.js';
 import loginMiddleware from './middleware/login.js';
@@ -9,6 +7,8 @@ import { connectMongo } from './database/database.js';
 import { setUserIfExist } from './utils.js';
 
 dotenv.config();
+const Scenes = Telegraf.Scenes;
+const session = Telegraf.session;
 
 const token = process.env?.BOT_TOKEN;
 const connectionString = process.env?.MONGO_CONNECTION;

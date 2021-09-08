@@ -1,9 +1,10 @@
 import { getGroupLeaders } from "mystat-api";
 import telegraf_inline from "telegraf-inline-menu";
-const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
-const MenuTemplate = telegraf_inline.MenuTemplate;
 import { Context } from "vm";
 import { cropString, formatMessage, getSessionValue, getUserDataFromSession, setSessionValue } from "../../utils.js";
+
+const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
+const MenuTemplate = telegraf_inline.MenuTemplate;
 
 const studentsField = 'students';
 

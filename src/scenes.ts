@@ -1,11 +1,11 @@
 import Telegraf from "telegraf";
-//{ deunionize, Scenes }
-const Scenes = Telegraf.Scenes;
-const deunionize = Telegraf.deunionize;
 import { authUser} from "mystat-api"
 import { getUserDataFromSession } from "./utils.js";
 import { createUser } from "./database/database.js";
 import { IUserData } from "./types.js";
+
+const Scenes = Telegraf.Scenes;
+const deunionize = Telegraf.deunionize;
 
 const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
     'login',
