@@ -1,10 +1,13 @@
-import { deunionize, Scenes } from "telegraf";
+import Telegraf from "telegraf";
 import { authUser} from "mystat-api"
 import { getUserDataFromSession } from "./utils.js";
 import { createUser } from "./database/database.js";
 import { IUserData } from "./types.js";
 
-const loginScene = new Scenes.WizardScene<Scenes.WizardContext>(
+const Scenes = Telegraf.Scenes;
+const deunionize = Telegraf.deunionize;
+
+const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
     'login',
     async (ctx) => {
         await ctx.reply('📲 Отправьте свой логин от mystat');
@@ -19,6 +22,7 @@ const loginScene = new Scenes.WizardScene<Scenes.WizardContext>(
 
         (ctx.session as any).username = username;
 
+        ctx.deleteMessage(ctx.message?.message_id); // Deleting login so it won't be in chat history
         await ctx.reply('🔑 Теперь оправьте свой пароль от mystat');
 
         return ctx.wizard.next();
@@ -32,6 +36,7 @@ const loginScene = new Scenes.WizardScene<Scenes.WizardContext>(
 
         (ctx.session as any).password = password;
 
+        ctx.deleteMessage(ctx.message?.message_id); // Deleting password so it won't be in chat history
         ctx.reply('🔍 Обработка информации');
 
         const userData: IUserData = getUserDataFromSession(ctx);

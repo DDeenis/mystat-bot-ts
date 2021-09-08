@@ -1,5 +1,8 @@
-import { MenuMiddleware, MenuTemplate } from "telegraf-inline-menu";
+import telegraf_inline from "telegraf-inline-menu";
 import { Context } from "vm";
+
+const MenuTemplate = telegraf_inline.MenuTemplate;
+const MenuMiddleware = telegraf_inline.MenuMiddleware;
 
 const loginMenuTemplate = new MenuTemplate((ctx: Context) => `Здравствуйте, ${ctx.from.first_name}`);
 
