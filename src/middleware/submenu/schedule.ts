@@ -46,11 +46,11 @@ const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
 
     const schedule = await getMonthSchedule(getUserDataFromSession(ctx), date);
     // actual buttons
-    let date_template = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-'; // smth like '2000-02-'
     for (let count = 0; count < totalDays; count++) {
 
         date.setDate(count + 1);
-        let cur_date = date_template + ('0' + (count + 1)).slice(-2); // smth like '2000-02-' + '02'
+        let options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
+        let cur_date = date.toLocaleDateString('ko-KR', options).replace(/\. /g, '-').slice(0, -1); // '2021. 09. 09.' -> '2021-09-09'
         if (schedule.data.find(elem => elem.date === cur_date) === undefined) { // if no lession matches with date
             days.push('🔴' + String(count + 1)); // put red dot
         }
