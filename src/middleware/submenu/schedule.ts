@@ -45,6 +45,13 @@ const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
     const days: string[] = [];
 
     const schedule = await getMonthSchedule(getUserDataFromSession(ctx), date);
+
+
+    // empty buttons before
+    date.setDate(1);
+    for (let count = 0; count < date.getDay() - 1; count++) {
+        days.push(' ');
+    }
     // actual buttons
     for (let count = 0; count < totalDays; count++) {
 
@@ -59,8 +66,9 @@ const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
         }
     }
 
-    // empty buttons
-    for (let count = 0; count < totalButtons - totalDays; count++) {
+    // empty buttons after
+    date.setDate(1);
+    for (let count = 0; count < totalButtons - totalDays - date.getDay() + 1; count++) {
         days.push(' ');
     }
 
