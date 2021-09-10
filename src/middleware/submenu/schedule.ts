@@ -82,7 +82,7 @@ const scheduleTomorrowSubmenu = new MenuTemplate<Context>(async (ctx) => await g
 scheduleTomorrowSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
 
 const monthScheduleEntrySubmenu = new MenuTemplate<Context>(async (ctx) => {
-    const day = ctx.match[1].match(/\d+| /)[0];
+    const day = ctx.match[1].match(/\d+| /)[0]; // extract number or space symbol
 
     if (day === ' ') {
         return '🎉 Нет пар';
