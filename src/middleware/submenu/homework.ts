@@ -77,6 +77,7 @@ selectedHomeworkListSubmenu.manualRow(async (ctx: Context) => {
 selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, path: string) => {
     const parts: string[] = path.split(':');
     const id: number = parseInt(parts[parts.length - 1]);
+    const homeworkMenuPath: string = ctx.update.callback_query.data.split(/\d+/)[0]; // 'menu/hw/hw-opt:{SMTH}/hw-list:' w/o id
     const homework = getSessionValue<any[]>(ctx, 'homeworks')?.find(h => h.id === id);
 
     await ctx.editMessageText(
@@ -100,7 +101,7 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
             [
                 {
                     text: '⬅️ Назад',
-                    callback_data: ctx.update.callback_query.data.split(/\d+/)[0], // 'menu/hw/hw-opt:{SMTH}/hw-list:' w/o id
+                    callback_data: homeworkMenuPath,
                 }
             ],
         ]
