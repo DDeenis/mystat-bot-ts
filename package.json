@@ -21,7 +21,8 @@
   },
   "scripts": {
     "start": "tsc && node ./build/index.js",
-    "dev": "tsc-watch --onSuccess \"node ./build/index.js\""
+    "dev": "tsc-watch --onSuccess \"node ./build/index.js\"",
+    "build": "tsc"
   },
   "type": "module"
 }

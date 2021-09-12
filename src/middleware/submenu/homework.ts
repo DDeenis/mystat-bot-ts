@@ -79,7 +79,7 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
     const id: number = parseInt(parts[parts.length - 1]);
     const homework = getSessionValue<any[]>(ctx, 'homeworks')?.find(h => h.id === id);
 
-    await ctx.reply(
+    await ctx.editMessageText(
         formatMessage(
             `✏️ Предмет: ${homework?.name_spec}`,
             `📖 Тема: ${homework?.theme}`,
@@ -95,17 +95,19 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
         { parse_mode: 'Markdown' }
     );
 
-    return '.';
+    ctx.editMessageReplyMarkup({
+        inline_keyboard: [
+            [
+                {
+                    text: '⬅️ Назад',
+                    callback_data: 'menu/hw/hw-list/',
+                }
+            ],
+        ]
+    });
+
+    return false;
 });
-// pagination unfinished
-// selectedHomeworkListSubmenu.pagination('hw-pg', {
-//     setPage: (ctx, page) => {
-//         ctx.session.current = ++page || 1;
-//         ctx.session.total = 10;
-//     },
-//     getCurrentPage: (ctx) => ctx.session.current,
-//     getTotalPages: (ctx) => ctx.session.total,
-// });
 selectedHomeworkListSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
 
 const homeworkSubmenu = new MenuTemplate<Context>(() => 'Выберите тип домашнего задания');

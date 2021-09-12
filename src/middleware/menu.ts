@@ -13,7 +13,7 @@ import { monthScheduleSubmenu, scheduleTodaySubmenu, scheduleTomorrowSubmenu } f
 const MenuTemplate = telegraf_inline.MenuTemplate;
 const MenuMiddleware = telegraf_inline.MenuMiddleware;
 
-const menuTemplate = new MenuTemplate<Context>(() => 'Выберите действие');
+export const menuTemplate = new MenuTemplate<Context>(() => 'Выберите действие');
 
 menuTemplate.submenu('Расписание на сегодня', 'schedule-today', scheduleTodaySubmenu);
 menuTemplate.submenu('Расписание на завтра', 'schedule-tomorrow', scheduleTomorrowSubmenu);
@@ -33,6 +33,4 @@ menuTemplate.interact('Выйти', 'logout', {
     }
 })
 
-const menuMiddleware = new MenuMiddleware('menu/', menuTemplate);
-
-export default menuMiddleware;
+export const menuMiddleware = new MenuMiddleware('menu/', menuTemplate);
