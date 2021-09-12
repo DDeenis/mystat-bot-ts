@@ -1,7 +1,9 @@
 import { getExams } from "mystat-api";
 import telegraf_inline from "telegraf-inline-menu";
 import { Context } from "vm";
-import { formatMessage, getSessionValue, getUserDataFromSession, setSessionValue } from "../../utils.js";
+import { cropString, formatMessage, getSessionValue, getUserDataFromSession, setSessionValue } from "../../utils.js";
+
+const formatString = (source: string): string => cropString(source, 20);
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -15,12 +17,12 @@ const getExamsList = async (ctx: Context): Promise<string[]> => {
 
     setSessionValue<any[]>(ctx, 'exams', exams.data);
 
-    return exams.data.map(e => e.spec.substring(0, 20) + '…');
+    return exams.data.map(e => formatString(e.spec));
 }
 
 const allExamsEntrySubmenu = new MenuTemplate<Context>(async (ctx) => {
     const match: string = ctx.match[1];
-    const exam = getSessionValue<any[]>(ctx, 'exams').find(e => e.spec.substring(0, 20) + '…' === match);
+    const exam = getSessionValue<any[]>(ctx, 'exams').find(e => formatString(e.spec) === match);
 
     const examFormatted = formatMessage(
         `✏️ Предмет: ${exam?.spec}`,

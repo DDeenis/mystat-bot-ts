@@ -1,20 +1,15 @@
 import { getNews, getNewsDetails } from "mystat-api";
 import telegraf_inline from "telegraf-inline-menu";
+import TurndownService from "turndown";
 import { Context } from "vm";
 import { cropString, formatMessage, getSessionValue, getUserDataFromSession, setSessionValue } from "../../utils.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
+const htmlConverter = new TurndownService();
 
 const newsField = 'news';
 const formatNews = (n: string): string => cropString(n, 20);
-const removeHTMLFromNews = (body: string): string => {
-    return body
-        .replace(/<[^>]*>?/gm, '\n')
-        .replace(/(\n\n\n\n)/gm, '\n\n')
-        .replace(/(\n\n\n)/gm, '\n\n')
-        .replace(/(\n\n)/gm, '\n');
-}
 
 const getNewsList = async (ctx: Context): Promise<string[]> => {
     const news = await getNews(getUserDataFromSession(ctx));
@@ -40,13 +35,17 @@ const newsEntrySubmenu = new MenuTemplate<Context>(async (ctx: Context) => {
         return '🚫 При получении новостей возникла ошибка: ' + newsEntryDetails.error;
     }
 
+    const convertedBody = htmlConverter.turndown((newsEntryDetails.data as any)?.text_bbs);
     const newsEntryFormatted = formatMessage(
         `✏️ Тема: ${newsEntry?.theme}`,
         `📅 Дата: ${newsEntry?.time}`,
-        removeHTMLFromNews((newsEntryDetails.data as any)?.text_bbs)
+        convertedBody,
     );
 
-    return newsEntryFormatted;
+    return {
+        text: newsEntryFormatted,
+        parse_mode: 'Markdown',
+    };
 });
 newsEntrySubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
 

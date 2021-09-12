@@ -46,7 +46,6 @@ bot.inlineQuery([], async (a) => {
 });
 bot.on('callback_query', async (ctx) => {
     await replyMenuToContext(menuTemplate, ctx, (ctx.callbackQuery as any).data);
-    // await Scenes.Stage.enter((ctx.callbackQuery as any).data);
 })
 
 bot.launch()
