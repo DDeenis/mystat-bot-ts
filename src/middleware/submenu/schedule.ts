@@ -43,9 +43,7 @@ const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
     const totalButtons = 35;
     const totalDays = daysInMonth(date.getFullYear(), date.getMonth() + 1);
     const days: string[] = [];
-
     const schedule = await getMonthSchedule(getUserDataFromSession(ctx), date);
-
 
     // empty buttons before
     date.setDate(1);
