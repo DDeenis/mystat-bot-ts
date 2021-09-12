@@ -54,9 +54,9 @@ const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
     for (let count = 0; count < totalDays; count++) {
 
         date.setDate(count + 1);
-        let options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
-        let cur_date = date.toLocaleDateString('ko-KR', options).replace(/\. /g, '-').slice(0, -1); // '2021. 09. 09.' -> '2021-09-09'
-        if (schedule.data.find(elem => elem.date === cur_date) === undefined) { // if no lession matches with date
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
+        const curDate = date.toLocaleDateString('ko-KR', options).replace(/\. /g, '-').slice(0, -1); // '2021. 09. 09.' -> '2021-09-09'
+        if (schedule.data.find(elem => elem.date === curDate) === undefined) { // if no lession matches with date
             days.push('🔴' + String(count + 1)); // put red dot
         }
         else {
