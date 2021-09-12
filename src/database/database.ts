@@ -12,7 +12,7 @@ export const connectMongo = async (connectionString: string): Promise<void> => {
                 useNewUrlParser: true,
                 useFindAndModify: true
             },
-            () => console.log("Mongoose is connected")
+            (err) => console.log(err ? err : 'Mongoose is connected')
         )
     } catch (error) {
         console.log('Failed to connect mongoose', error);
