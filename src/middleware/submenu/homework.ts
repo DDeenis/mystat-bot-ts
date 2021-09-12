@@ -96,14 +96,14 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
     return '.';
 });
 // pagination unfinished
-selectedHomeworkListSubmenu.pagination('hw-pg', {
-    setPage: (ctx, page) => {
-        ctx.session.current = ++page || 1;
-        ctx.session.total = 10;
-    },
-    getCurrentPage: (ctx) => ctx.session.current,
-    getTotalPages: (ctx) => ctx.session.total,
-});
+// selectedHomeworkListSubmenu.pagination('hw-pg', {
+//     setPage: (ctx, page) => {
+//         ctx.session.current = ++page || 1;
+//         ctx.session.total = 10;
+//     },
+//     getCurrentPage: (ctx) => ctx.session.current,
+//     getTotalPages: (ctx) => ctx.session.total,
+// });
 selectedHomeworkListSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
 
 const homeworkSubmenu = new MenuTemplate<Context>(() => 'Выберите тип домашнего задания');
