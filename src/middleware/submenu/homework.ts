@@ -8,11 +8,11 @@ const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
 
 enum HomeworkStatusTypes {
-    Overdue = 'Просроченные',
-    Checked = 'Выполненные',
-    Uploaded = 'Загруженные',
-    Active = 'Текущие',
-    Deleted = 'Удаленные'
+    Overdue = '🔥Просроченные',
+    Checked = '📩Выполненные',
+    Uploaded = '📥Загруженные',
+    Active = '📨Текущие',
+    Deleted = '🗑Удаленные'
 }
 
 const homeworkStatusList = [

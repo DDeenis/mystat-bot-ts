@@ -15,16 +15,16 @@ const MenuMiddleware = telegraf_inline.MenuMiddleware;
 
 const menuTemplate = new MenuTemplate<Context>(() => 'Выберите действие');
 
-menuTemplate.submenu('Расписание на сегодня', 'schedule-today', scheduleTodaySubmenu);
-menuTemplate.submenu('Расписание на завтра', 'schedule-tomorrow', scheduleTomorrowSubmenu);
-menuTemplate.submenu('Расписание на месяц', 'schedule-month', monthScheduleSubmenu);
-menuTemplate.submenu('Домашние задания', 'hw', homeworkSubmenu);
-menuTemplate.submenu('Будущие экзамены', 'future-exams', futureExamsSubmenu);
-menuTemplate.submenu('Все экзамены', 'all-exams', allExamsSubmenu);
-menuTemplate.submenu('Новости', 'news', newsSubmenu);
-menuTemplate.submenu('Группа', 'grp', groupSubmenu);
-menuTemplate.submenu('Информация о себе', 'p-info', personalInfoSubmenu);
-menuTemplate.interact('Выйти', 'logout', {
+menuTemplate.submenu('🗓Расписание на сегодня', 'schedule-today', scheduleTodaySubmenu);
+menuTemplate.submenu('🗓Расписание на завтра', 'schedule-tomorrow', scheduleTomorrowSubmenu);
+menuTemplate.submenu('📅Расписание на месяц', 'schedule-month', monthScheduleSubmenu);
+menuTemplate.submenu('✉️Домашние задания', 'hw', homeworkSubmenu);
+menuTemplate.submenu('🕯Будущие экзамены', 'future-exams', futureExamsSubmenu);
+menuTemplate.submenu('⚰️Все экзамены', 'all-exams', allExamsSubmenu);
+menuTemplate.submenu('📄Новости', 'news', newsSubmenu);
+menuTemplate.submenu('⛏Группа', 'grp', groupSubmenu);
+menuTemplate.submenu('🖨Информация о себе', 'p-info', personalInfoSubmenu);
+menuTemplate.interact('🚪Выйти', 'logout', {
     do: async (ctx) => {
         await setUserDataToSession(ctx, { username: '', password: '' });
         await deleteUser(ctx.chat?.id);
