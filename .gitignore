@@ -4,6 +4,5 @@ build
 ref
 
 # files
-yarn.lock
 .eslintrc.json
 .env
