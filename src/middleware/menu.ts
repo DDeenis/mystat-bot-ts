@@ -1,4 +1,4 @@
-import { MenuMiddleware, MenuTemplate } from "telegraf-inline-menu";
+import telegraf_inline from "telegraf-inline-menu";
 import { Context } from "vm";
 import { deleteUser } from "../database/database.js";
 import { setUserDataToSession } from "../utils.js";
@@ -9,6 +9,9 @@ import homeworkSubmenu from "./submenu/homework.js";
 import newsSubmenu from "./submenu/news.js";
 import personalInfoSubmenu from "./submenu/personalInfo.js";
 import { monthScheduleSubmenu, scheduleTodaySubmenu, scheduleTomorrowSubmenu } from "./submenu/schedule.js";
+
+const MenuTemplate = telegraf_inline.MenuTemplate;
+const MenuMiddleware = telegraf_inline.MenuMiddleware;
 
 const menuTemplate = new MenuTemplate<Context>(() => 'Выберите действие');
 

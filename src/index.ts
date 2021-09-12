@@ -1,4 +1,4 @@
-import { Scenes, session, Telegraf } from 'telegraf';
+import Telegraf from 'telegraf';
 import dotenv from "dotenv";
 import scenes from './scenes.js';
 import loginMiddleware from './middleware/login.js';
@@ -7,6 +7,8 @@ import { connectMongo } from './database/database.js';
 import { setUserIfExist } from './utils.js';
 
 dotenv.config();
+const Scenes = Telegraf.Scenes;
+const session = Telegraf.session;
 
 const token = process.env?.BOT_TOKEN;
 const connectionString = process.env?.MONGO_CONNECTION;
@@ -22,8 +24,8 @@ if (!connectionString) {
 (async () => await connectMongo(connectionString))()
 const loginScene = scenes.login;
 
-const stage = new Scenes.Stage<Scenes.WizardContext>([loginScene], { ttl: 360 });
-const bot = new Telegraf<Scenes.WizardContext>(token);
+const stage = new Scenes.Stage<Telegraf.Scenes.WizardContext>([loginScene], { ttl: 360 });
+const bot = new Telegraf.Telegraf<Telegraf.Scenes.WizardContext>(token);
 
 bot.use(session());
 bot.use(stage.middleware());
