@@ -100,7 +100,7 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
             [
                 {
                     text: '⬅️ Назад',
-                    callback_data: 'menu/hw/hw-list/',
+                    callback_data: ctx.update.callback_query.data.split(/\d+/)[0], // 'menu/hw/hw-opt:{SMTH}/hw-list:' w/o id
                 }
             ],
         ]
