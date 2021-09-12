@@ -5,11 +5,12 @@ import loginMiddleware from './middleware/login.js';
 import { menuTemplate, menuMiddleware } from './middleware/menu.js';
 import { connectMongo } from './database/database.js';
 import { setUserIfExist } from './utils.js';
-import { replyMenuToContext } from 'telegraf-inline-menu';
+import telegraf_inline from "telegraf-inline-menu";
 
 dotenv.config();
 const Scenes = Telegraf.Scenes;
 const session = Telegraf.session;
+const replyMenuToContext = telegraf_inline.replyMenuToContext;
 
 const token = process.env?.BOT_TOKEN;
 const connectionString = process.env?.MONGO_CONNECTION;
