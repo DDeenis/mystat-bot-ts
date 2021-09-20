@@ -6,6 +6,9 @@ import {formatMessage, getUserDataFromSession} from '../../utils.js';
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
 
+const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
+  date.toLocaleDateString('ko-KR', options).replace(/\. /g, '-').slice(0, -1);
+
 const getScheduleFormatted = async (ctx: Context, title: string, day?: number): Promise<string> => {
   const date = new Date();
 
@@ -52,18 +55,17 @@ const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
   for (let count = 0; count < totalDays; count++) {
     date.setDate(count + 1);
 
-    const options: Intl.DateTimeFormatOptions = {
+    const dateFormatOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
     };
-    const curDate = date.toLocaleDateString('ko-KR', options).replace(/\. /g, '-').slice(0, -1); // '2021. 09. 09.' -> '2021-09-09'
+    const currentDate = formatDate(date, dateFormatOptions);
 
-    if (schedule.data.find((elem) => elem.date === curDate) === undefined) {
-      // if no lession matches with date
-      days.push('🔴' + String(count + 1)); // put red dot
+    if (schedule.data.some((elem) => elem.date === currentDate)) {
+      days.push('🟢' + String(count + 1));
     } else {
-      days.push('🟢' + String(count + 1)); // put green got
+      days.push('🔴' + String(count + 1));
     }
   }
 
