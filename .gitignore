@@ -4,5 +4,4 @@ build
 ref
 
 # files
-.eslintrc.json
 .env
