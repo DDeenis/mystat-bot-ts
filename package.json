@@ -16,15 +16,21 @@
   "devDependencies": {
     "@types/node": "^15.12.5",
     "@types/turndown": "^5.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.28.0",
-    "@typescript-eslint/parser": "^4.28.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
     "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "prettier-eslint": "^13.0.0",
     "tsc-watch": "^4.4.0"
   },
   "scripts": {
     "start": "tsc && node ./build/index.js",
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\"",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "yarn eslint src --ext .ts",
+    "lint:fix": "yarn eslint src --ext .ts --fix"
   },
   "type": "module"
 }
