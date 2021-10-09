@@ -4,7 +4,7 @@ import scenes from './scenes.js';
 import loginMiddleware from './middleware/login.js';
 import {menuTemplate, menuMiddleware} from './middleware/menu.js';
 import {connectMongo} from './database/database.js';
-import {setUserIfExist} from './utils.js';
+import {getUserDataFromSession, setUserIfExist} from './utils.js';
 import telegraf_inline from 'telegraf-inline-menu';
 
 dotenv.config();
@@ -40,6 +40,11 @@ bot.use(menuMiddleware);
 
 bot.command('login', async (ctx) => await loginMiddleware.replyToContext(ctx));
 bot.command('menu', async (ctx) => await menuMiddleware.replyToContext(ctx));
+bot.start(async (ctx) => {
+  const {username, password} = getUserDataFromSession(ctx);
+
+  return await (username && password ? menuMiddleware.replyToContext(ctx) : loginMiddleware.replyToContext(ctx));
+});
 
 bot.inlineQuery([], async (a) => {
   await Scenes.Stage.enter(a.callbackQuery ?? '');
