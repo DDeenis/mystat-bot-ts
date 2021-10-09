@@ -10,7 +10,7 @@ export const connectMongo = async (connectionString: string): Promise<void> => {
         keepAlive: true,
         useUnifiedTopology: true,
         useNewUrlParser: true,
-        useFindAndModify: true,
+        useFindAndModify: false,
       },
       (err) => console.log(err ? err : 'Mongoose is connected'),
     );
@@ -25,7 +25,7 @@ export const createUser = async (user: IUser): Promise<void> => {
       if (err) {
         console.log('Error while creating/updating user: ' + err);
       } else {
-        console.log('User created/updates successfully');
+        console.log('User created/updated successfully');
       }
     });
   } catch (error) {
@@ -35,7 +35,7 @@ export const createUser = async (user: IUser): Promise<void> => {
 
 export const deleteUser = async (chatId: number): Promise<void> => {
   try {
-    await UserModel.remove({chatId});
+    await UserModel.deleteOne({chatId});
   } catch (error) {
     console.log(error);
   }
