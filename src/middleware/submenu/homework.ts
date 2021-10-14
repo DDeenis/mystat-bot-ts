@@ -23,32 +23,22 @@ const homeworkStatusList = [
   HomeworkStatusTypes.Deleted,
 ];
 
-function getHomeworkStatusByMatch(match: string): number {
-  switch (match) {
-    case HomeworkStatusTypes.Active:
-      return HomeworkStatus.Active;
-
-    case HomeworkStatusTypes.Checked:
-      return HomeworkStatus.Checked;
-
-    case HomeworkStatusTypes.Deleted:
-      return HomeworkStatus.Deleted;
-
-    case HomeworkStatusTypes.Overdue:
-      return HomeworkStatus.Overdue;
-
-    case HomeworkStatusTypes.Uploaded:
-      return HomeworkStatus.Uploaded;
-
-    default:
-      return -1;
-  }
-}
+const homeworkStatusTitles = {
+  [HomeworkStatusTypes.Active]: HomeworkStatus.Active,
+  [HomeworkStatusTypes.Checked]: HomeworkStatus.Checked,
+  [HomeworkStatusTypes.Uploaded]: HomeworkStatus.Uploaded,
+  [HomeworkStatusTypes.Overdue]: HomeworkStatus.Overdue,
+  [HomeworkStatusTypes.Deleted]: HomeworkStatus.Deleted,
+};
 
 async function getHomeworksByMatch(ctx: Context): Promise<unknown[]> {
   const match: string = ctx.match[1];
-  const homeworkStatus = getHomeworkStatusByMatch(match);
-  const homeworks = await getHomeworkList(getUserDataFromSession(ctx), homeworkStatus);
+  const homeworkStatus = homeworkStatusTitles[match as HomeworkStatusTypes];
+  const homeworks = await getHomeworkList(
+    getUserDataFromSession(ctx),
+    homeworkStatus,
+    getSessionValue<number>(ctx, 'page') || 1,
+  );
   setSessionValue<unknown[]>(ctx, 'homeworks', homeworks.data);
 
   return homeworks.data;
@@ -109,6 +99,16 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
 
   return false;
 });
+
+selectedHomeworkListSubmenu.pagination('hw-pg', {
+  getTotalPages: async (ctx) => {
+    const currentPage = getSessionValue<number>(ctx, 'page') || 1;
+    return currentPage + 1;
+  },
+  setPage: (ctx, page) => setSessionValue<number>(ctx, 'page', page),
+  getCurrentPage: (ctx) => getSessionValue<number>(ctx, 'page'),
+});
+
 selectedHomeworkListSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
 
 const homeworkSubmenu = new MenuTemplate<Context>(() => 'Выберите тип домашнего задания');
