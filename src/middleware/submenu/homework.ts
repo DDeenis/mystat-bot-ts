@@ -52,6 +52,7 @@ selectedHomeworkSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад')
 const selectedHomeworkListSubmenu = new MenuTemplate<Context>((ctx) => ctx.match[1]);
 selectedHomeworkListSubmenu.manualRow(async (ctx: Context) => {
   const homeworks = await getHomeworksByMatch(ctx);
+  setSessionValue<number>(ctx, 'page', 0);
 
   const format = (h: any) => ({text: h.name_spec, relativePath: 'hw-list:' + h.id});
 
