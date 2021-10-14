@@ -45,8 +45,6 @@ async function getHomeworksByMatch(ctx: Context): Promise<unknown[]> {
 }
 
 const selectedHomeworkSubmenu = new MenuTemplate<Context>((ctx) => {
-  console.log(ctx.match);
-
   return ctx.match[2];
 });
 selectedHomeworkSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
@@ -102,8 +100,10 @@ selectedHomeworkListSubmenu.manualAction(/hw-list:(\d+)$/, async (ctx: Context, 
 
 selectedHomeworkListSubmenu.pagination('hw-pg', {
   getTotalPages: async (ctx) => {
+    const hwPerPage = 6;
+    const hwCount = (await getHomeworksByMatch(ctx))?.length;
     const currentPage = getSessionValue<number>(ctx, 'page') || 1;
-    return currentPage + 1;
+    return hwCount >= hwPerPage ? currentPage + 1 : currentPage;
   },
   setPage: (ctx, page) => setSessionValue<number>(ctx, 'page', page),
   getCurrentPage: (ctx) => getSessionValue<number>(ctx, 'page'),
