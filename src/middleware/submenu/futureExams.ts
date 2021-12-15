@@ -1,28 +1,34 @@
-import {getFutureExams} from 'mystat-api';
-import telegraf_inline from 'telegraf-inline-menu';
-import {Context} from 'vm';
-import {formatMessage, getUserDataFromSession} from '../../utils.js';
+import telegraf_inline from "telegraf-inline-menu";
+import { Context } from "vm";
+import userStore from "../../store/userStore.js";
+import { formatMessage } from "../../utils.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
 
 const futureExamsSubmenu = new MenuTemplate<Context>(async (ctx) => {
-  const futureExams = await getFutureExams(getUserDataFromSession(ctx));
+  const futureExams = await userStore.get(ctx.chat.id)?.getFutureExams();
 
-  if (!futureExams.success) {
-    return '🚫 При получении расписания экзаменов возникла ошибка: ' + futureExams.error;
+  if (!futureExams || !futureExams.success) {
+    return (
+      "🚫 При получении расписания экзаменов возникла ошибка: " +
+      futureExams?.error
+    );
   } else if (futureExams.data.length === 0) {
-    return '🎉 У вас нет назначеных экзаменов';
+    return "🎉 У вас нет назначеных экзаменов";
   }
 
-  let futureExamsFormatted = '';
+  let futureExamsFormatted = "";
 
   for (const exam of futureExams.data) {
-    futureExamsFormatted += formatMessage(`✏️ Предмет: ${exam?.spec}`, `⏰ Дата: ${exam?.date}`);
+    futureExamsFormatted += formatMessage(
+      `✏️ Предмет: ${exam?.spec}`,
+      `⏰ Дата: ${exam?.date}`
+    );
   }
 
-  return ['Будущие экзамены', futureExamsFormatted].join('\n');
+  return ["Будущие экзамены", futureExamsFormatted].join("\n");
 });
-futureExamsSubmenu.manualRow(createBackMainMenuButtons('⬅️ Назад'));
+futureExamsSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
 export default futureExamsSubmenu;
