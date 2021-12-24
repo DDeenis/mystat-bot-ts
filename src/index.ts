@@ -24,41 +24,49 @@ if (!connectionString) {
   throw new Error("MongoDB connection string is not provided");
 }
 
-(async () => await connectMongo(connectionString))();
-const loginScene = scenes.login;
+(async () => {
+  await connectMongo(connectionString);
+  const loginScene = scenes.login;
 
-const stage = new Scenes.Stage<Telegraf.Scenes.WizardContext>([loginScene], {
-  ttl: 360,
-});
-const bot = new Telegraf.Telegraf<Telegraf.Scenes.WizardContext>(token);
+  const stage = new Scenes.Stage<Telegraf.Scenes.WizardContext>([loginScene], {
+    ttl: 360,
+  });
+  const bot = new Telegraf.Telegraf<Telegraf.Scenes.WizardContext>(token);
 
-bot.use(session());
-bot.use(stage.middleware());
-bot.use(async (ctx, next) => {
-  await setUserIfExist(ctx);
-  await next();
-});
-bot.use(loginMiddleware);
-bot.use(menuMiddleware);
+  bot.use(session());
+  bot.use(stage.middleware());
+  bot.use(async (ctx, next) => {
+    await setUserIfExist(ctx);
+    await next();
+  });
+  bot.use(loginMiddleware);
+  bot.use(menuMiddleware);
 
-bot.command("login", async (ctx) => await loginMiddleware.replyToContext(ctx));
-bot.command("menu", async (ctx) => await menuMiddleware.replyToContext(ctx));
-bot.start(async (ctx) => {
-  const userLogged = userStore.has(ctx.chat.id);
+  bot.command(
+    "login",
+    async (ctx) => await loginMiddleware.replyToContext(ctx)
+  );
+  bot.command("menu", async (ctx) => await menuMiddleware.replyToContext(ctx));
+  bot.start(async (ctx) => {
+    const userLogged = userStore.has(ctx.chat.id);
 
-  return await (userLogged
-    ? menuMiddleware.replyToContext(ctx)
-    : loginMiddleware.replyToContext(ctx));
-});
+    return await (userLogged
+      ? menuMiddleware.replyToContext(ctx)
+      : loginMiddleware.replyToContext(ctx));
+  });
 
-bot.inlineQuery([], async (a) => {
-  await Scenes.Stage.enter(a.callbackQuery ?? "");
-});
-bot.on("callback_query", async (ctx) => {
-  await replyMenuToContext(menuTemplate, ctx, (ctx.callbackQuery as any).data);
-});
+  bot.inlineQuery([], async (a) => {
+    await Scenes.Stage.enter(a.callbackQuery ?? "");
+  });
+  bot.on("callback_query", async (ctx) => {
+    await replyMenuToContext(
+      menuTemplate,
+      ctx,
+      (ctx.callbackQuery as any).data
+    );
+  });
 
-bot.launch();
-
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+  bot.launch();
+  process.once("SIGINT", () => bot.stop("SIGINT"));
+  process.once("SIGTERM", () => bot.stop("SIGTERM"));
+})();
