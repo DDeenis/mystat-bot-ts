@@ -26,6 +26,7 @@ if (!connectionString) {
 
 (async () => {
   await connectMongo(connectionString);
+
   const loginScene = scenes.login;
 
   const stage = new Scenes.Stage<Telegraf.Scenes.WizardContext>([loginScene], {

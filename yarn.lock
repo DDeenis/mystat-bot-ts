@@ -467,6 +467,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+dayjs@^1.10.7:
+  version "1.10.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
+  integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
+
 debug@3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/debug/-/debug-3.1.0.tgz"
@@ -1109,12 +1114,13 @@ ms@2.1.2:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-mystat-api@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/mystat-api/-/mystat-api-3.0.1.tgz#54157a8614d01cc80ec1ee9c6cac08261ab8773e"
-  integrity sha512-Y6xNjxh+dSlQP6szc6tKuVK0KMGM+6cSs0jH2MjicezxNNYLmOrjhsMdQPrXF3GMmOBUE8xZDCGReUtrKNkR2w==
+mystat-api@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/mystat-api/-/mystat-api-3.0.3.tgz#55e8b45302e8e12d33a5c5b9890b503d88b1fd9d"
+  integrity sha512-4nxVxObXKVLoBSljyY65gp2As2bz+XwF7vWO17SvGzkNTvzJHcHAz9cw3YcdnRaHjvShOo+ASQsM7lRKhpgVyw==
   dependencies:
     axios "^0.21.1"
+    dayjs "^1.10.7"
     jwt-decode "^3.1.2"
 
 natural-compare@^1.4.0:
