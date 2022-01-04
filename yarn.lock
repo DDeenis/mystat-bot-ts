@@ -1109,10 +1109,10 @@ ms@2.1.2:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-mystat-api@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/mystat-api/-/mystat-api-3.0.4.tgz#95b9c88e672072bef5f6843c77e7036b6317198a"
-  integrity sha512-9RJCl3Xk+xsAIw3GoklJVUxg/2lAM8BN2zZdDnDleKYjU+l5IAKU//w/d4c1as3W2DifCVZFzOiw9e3C9uGi+w==
+mystat-api@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/mystat-api/-/mystat-api-3.0.5.tgz#dbe076128a4df25205072bfc9d5091c48c2b0eb1"
+  integrity sha512-ieKLfi7J++CZYq0kFhm+TAE2b3NSFz4GuhxiCF0qH7X0yGOu+I6YEBg5Rz0DXh1FvDd2Jji+lswduhoMIuU7tw==
   dependencies:
     axios "^0.21.1"
     jwt-decode "^3.1.2"
