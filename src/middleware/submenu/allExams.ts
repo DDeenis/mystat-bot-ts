@@ -1,5 +1,5 @@
 import telegraf_inline from "telegraf-inline-menu";
-import { Context } from "vm";
+import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
 import {
   cropString,
@@ -13,8 +13,8 @@ const formatString = (source: string): string => cropString(source, 20);
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
 
-const getExamsList = async (ctx: Context): Promise<string[]> => {
-  const exams = await userStore.get(ctx.chat.id)?.getExams();
+const getExamsList = async (ctx: Scenes.WizardContext): Promise<string[]> => {
+  const exams = await userStore.get(ctx.chat?.id)?.getExams();
 
   if (!exams || !exams.success) {
     return [];
@@ -25,7 +25,7 @@ const getExamsList = async (ctx: Context): Promise<string[]> => {
   return exams.data.map((e: any) => formatString(e.spec));
 };
 
-const allExamsEntrySubmenu = new MenuTemplate<Context>(async (ctx) => {
+const allExamsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   const match: string = ctx.match[1];
   const exam = getSessionValue<any[]>(ctx, "exams").find(
     (e) => formatString(e.spec) === match
@@ -42,7 +42,9 @@ const allExamsEntrySubmenu = new MenuTemplate<Context>(async (ctx) => {
 });
 allExamsEntrySubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-const allExamsSubmenu = new MenuTemplate<Context>(() => "Все экзамены");
+const allExamsSubmenu = new MenuTemplate<Scenes.WizardContext>(
+  () => "Все экзамены"
+);
 allExamsSubmenu.chooseIntoSubmenu(
   "exams",
   async (ctx) => await getExamsList(ctx),

@@ -1,5 +1,5 @@
 import telegraf_inline from "telegraf-inline-menu";
-import { Context } from "vm";
+import { Scenes } from "telegraf";
 import { deleteUser } from "../database/database.js";
 import userStore from "../store/userStore.js";
 import allExamsSubmenu from "./submenu/allExams.js";
@@ -17,7 +17,7 @@ import {
 const MenuTemplate = telegraf_inline.MenuTemplate;
 const MenuMiddleware = telegraf_inline.MenuMiddleware;
 
-export const menuTemplate = new MenuTemplate<Context>(
+export const menuTemplate = new MenuTemplate<Scenes.WizardContext>(
   () => "Выберите действие"
 );
 
@@ -44,11 +44,15 @@ menuTemplate.submenu("⛏Группа", "grp", groupSubmenu);
 menuTemplate.submenu("🖨Информация о себе", "p-info", personalInfoSubmenu);
 menuTemplate.interact("🚪Выйти", "logout", {
   do: async (ctx) => {
-    userStore.set(ctx.chat.id, { username: "", password: "" });
-    await deleteUser(ctx.chat?.id);
-    await ctx.reply(
-      "Вы вышли из аккаунта. Используйте /login чтобы войти снова."
-    );
+    const chatId = ctx.chat?.id;
+
+    if (chatId) {
+      userStore.set(chatId, { username: "", password: "" });
+      await deleteUser(chatId);
+      await ctx.reply(
+        "Вы вышли из аккаунта. Используйте /login чтобы войти снова."
+      );
+    }
     return false;
   },
 });

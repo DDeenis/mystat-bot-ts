@@ -1,6 +1,6 @@
 import telegraf_inline from "telegraf-inline-menu";
 import TurndownService from "turndown";
-import { Context } from "vm";
+import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
 import {
   cropString,
@@ -16,8 +16,8 @@ const htmlConverter = new TurndownService();
 const newsField = "news";
 const formatNews = (n: string): string => cropString(n, 20);
 
-const getNewsList = async (ctx: Context): Promise<string[]> => {
-  const news = await userStore.get(ctx.chat.id)?.getNews();
+const getNewsList = async (ctx: Scenes.WizardContext): Promise<string[]> => {
+  const news = await userStore.get(ctx.chat?.id)?.getNews();
 
   if (!news || !news.success) {
     console.log(news?.error);
@@ -29,13 +29,13 @@ const getNewsList = async (ctx: Context): Promise<string[]> => {
   return news.data.map((n: any) => formatNews(n.theme));
 };
 
-const newsEntrySubmenu = new MenuTemplate<Context>(async (ctx: Context) => {
+const newsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   const match = ctx.match[1];
   const newsList = getSessionValue<any[]>(ctx, newsField);
 
   const newsEntry = newsList.find((n) => formatNews(n.theme) === match);
   const newsEntryDetails = await userStore
-    .get(ctx.chat.id)
+    .get(ctx.chat?.id)
     ?.getNewsDetails(newsEntry.id_bbs);
 
   if (!newsEntry || !newsEntryDetails || !newsEntryDetails.success) {
@@ -60,10 +60,10 @@ const newsEntrySubmenu = new MenuTemplate<Context>(async (ctx: Context) => {
 });
 newsEntrySubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-const newsSubmenu = new MenuTemplate<Context>(() => "Новости");
+const newsSubmenu = new MenuTemplate<Scenes.WizardContext>(() => "Новости");
 newsSubmenu.chooseIntoSubmenu(
   "news-list",
-  async (ctx: Context) => await getNewsList(ctx),
+  async (ctx) => await getNewsList(ctx),
   newsEntrySubmenu,
   {
     columns: 2,

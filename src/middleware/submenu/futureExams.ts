@@ -1,34 +1,36 @@
 import telegraf_inline from "telegraf-inline-menu";
-import { Context } from "vm";
+import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
 import { formatMessage } from "../../utils.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
 
-const futureExamsSubmenu = new MenuTemplate<Context>(async (ctx) => {
-  const futureExams = await userStore.get(ctx.chat.id)?.getFutureExams();
+const futureExamsSubmenu = new MenuTemplate<Scenes.WizardContext>(
+  async (ctx) => {
+    const futureExams = await userStore.get(ctx.chat?.id)?.getFutureExams();
 
-  if (!futureExams || !futureExams.success) {
-    return (
-      "🚫 При получении расписания экзаменов возникла ошибка: " +
-      futureExams?.error
-    );
-  } else if (futureExams.data.length === 0) {
-    return "🎉 У вас нет назначеных экзаменов";
+    if (!futureExams || !futureExams.success) {
+      return (
+        "🚫 При получении расписания экзаменов возникла ошибка: " +
+        futureExams?.error
+      );
+    } else if (futureExams.data.length === 0) {
+      return "🎉 У вас нет назначеных экзаменов";
+    }
+
+    let futureExamsFormatted = "";
+
+    for (const exam of futureExams.data) {
+      futureExamsFormatted += formatMessage(
+        `✏️ Предмет: ${exam?.spec}`,
+        `⏰ Дата: ${exam?.date}`
+      );
+    }
+
+    return ["Будущие экзамены", futureExamsFormatted].join("\n");
   }
-
-  let futureExamsFormatted = "";
-
-  for (const exam of futureExams.data) {
-    futureExamsFormatted += formatMessage(
-      `✏️ Предмет: ${exam?.spec}`,
-      `⏰ Дата: ${exam?.date}`
-    );
-  }
-
-  return ["Будущие экзамены", futureExamsFormatted].join("\n");
-});
+);
 futureExamsSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
 export default futureExamsSubmenu;

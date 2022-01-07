@@ -16,7 +16,7 @@ const studentsField = "students";
 const formatStudentName = (source: string) => cropString(source, 24);
 
 const getStudents = async (ctx: Context): Promise<string[]> => {
-  const students = await userStore.get(ctx.chat.id)?.getGroupLeaders();
+  const students = await userStore.get(ctx.chat?.id)?.getGroupLeaders();
 
   if (!students || !students.success) {
     console.log(students?.error);

@@ -1,6 +1,6 @@
 import { MystatHomeworkStatus } from "mystat-api/dist/types.js";
 import telegraf_inline from "telegraf-inline-menu";
-import { Context } from "vm";
+import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
 import {
   formatMessage,
@@ -35,11 +35,11 @@ const homeworkStatusTitles = {
   [HomeworkStatusTypes.Deleted]: MystatHomeworkStatus.Deleted,
 };
 
-async function getHomeworksByMatch(ctx: Context): Promise<unknown[]> {
+async function getHomeworksByMatch(ctx: any): Promise<unknown[]> {
   const match: string = ctx.match[1];
   const homeworkStatus = homeworkStatusTitles[match as HomeworkStatusTypes];
   const homeworks = await userStore
-    .get(ctx.chat.id)
+    .get(ctx.chat?.id)
     ?.getHomeworkList(
       homeworkStatus,
       getSessionValue<number>(ctx, "page") || 1
@@ -49,15 +49,15 @@ async function getHomeworksByMatch(ctx: Context): Promise<unknown[]> {
   return homeworks?.data;
 }
 
-const selectedHomeworkSubmenu = new MenuTemplate<Context>((ctx) => {
+const selectedHomeworkSubmenu = new MenuTemplate<any>((ctx) => {
   return ctx.match[2];
 });
 selectedHomeworkSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-const selectedHomeworkListSubmenu = new MenuTemplate<Context>(
+const selectedHomeworkListSubmenu = new MenuTemplate<any>(
   (ctx) => ctx.match[1]
 );
-selectedHomeworkListSubmenu.manualRow(async (ctx: Context) => {
+selectedHomeworkListSubmenu.manualRow(async (ctx: Scenes.WizardContext) => {
   const homeworks = await getHomeworksByMatch(ctx);
   setSessionValue<number>(ctx, "page", 0);
 
@@ -75,7 +75,7 @@ selectedHomeworkListSubmenu.manualRow(async (ctx: Context) => {
 
 selectedHomeworkListSubmenu.manualAction(
   /hw-list:(\d+)$/,
-  async (ctx: Context, path: string) => {
+  async (ctx: any, path: string) => {
     const parts: string[] = path.split(":");
     const id: number = parseInt(parts[parts.length - 1]);
     const homeworkMenuPath: string =
@@ -130,7 +130,7 @@ selectedHomeworkListSubmenu.pagination("hw-pg", {
 
 selectedHomeworkListSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-const homeworkSubmenu = new MenuTemplate<Context>(
+const homeworkSubmenu = new MenuTemplate<Scenes.WizardContext>(
   () => "Выберите тип домашнего задания"
 );
 homeworkSubmenu.chooseIntoSubmenu(

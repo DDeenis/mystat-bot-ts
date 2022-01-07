@@ -12,7 +12,11 @@ export class UserStore {
     this.users = new Map<ChatId, MystatAPI>();
   }
 
-  get(chatId: ChatId) {
+  get(chatId?: ChatId) {
+    if (!chatId) {
+      return undefined;
+    }
+
     const result = this.users.get(chatId);
 
     if (!result) {

@@ -1,5 +1,5 @@
 import telegraf_inline from "telegraf-inline-menu";
-import { Context } from "vm";
+import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
 import { formatMessage } from "../../utils.js";
 
@@ -10,7 +10,7 @@ const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) =>
   date.toLocaleDateString("ko-KR", options).replace(/\. /g, "-").slice(0, -1);
 
 const getScheduleFormatted = async (
-  ctx: Context,
+  ctx: Scenes.WizardContext,
   title: string,
   day?: number
 ): Promise<string> => {
@@ -20,7 +20,7 @@ const getScheduleFormatted = async (
     date.setDate(day);
   }
 
-  const schedule = await userStore.get(ctx.chat.id)?.getScheduleByDate(date);
+  const schedule = await userStore.get(ctx.chat?.id)?.getScheduleByDate(date);
   let scheduleFormatted = "";
 
   if (!schedule || !schedule.success) {
@@ -45,11 +45,14 @@ const getDateString = (date: Date = new Date()) =>
   date.toLocaleString().substring(3, 10);
 const daysInMonth = (year: number, month: number): number =>
   new Date(year, month, 0).getDate();
-const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
+const getDaysArray = async (
+  date: Date,
+  ctx: Scenes.WizardContext
+): Promise<string[]> => {
   const totalButtons = 35;
   const totalDays = daysInMonth(date.getFullYear(), date.getMonth() + 1);
   const days: string[] = [];
-  const schedule = await userStore.get(ctx.chat.id)?.getMonthSchedule(date);
+  const schedule = await userStore.get(ctx.chat?.id)?.getMonthSchedule(date);
 
   // empty buttons before
   date.setDate(1);
@@ -88,12 +91,12 @@ const getDaysArray = async (date: Date, ctx: Context): Promise<string[]> => {
   return days;
 };
 
-const scheduleTodaySubmenu = new MenuTemplate<Context>(
+const scheduleTodaySubmenu = new MenuTemplate<Scenes.WizardContext>(
   async (ctx) => await getScheduleFormatted(ctx, "Раписание на сегодня")
 );
 scheduleTodaySubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-const scheduleTomorrowSubmenu = new MenuTemplate<Context>(
+const scheduleTomorrowSubmenu = new MenuTemplate<Scenes.WizardContext>(
   async (ctx) =>
     await getScheduleFormatted(
       ctx,
@@ -103,7 +106,7 @@ const scheduleTomorrowSubmenu = new MenuTemplate<Context>(
 );
 scheduleTomorrowSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-const monthScheduleEntrySubmenu = new MenuTemplate<Context>(async (ctx) => {
+const monthScheduleEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   const day = ctx.match[1].match(/\d+| /)[0]; // extract number or space symbol
 
   if (day === " ") {
@@ -118,7 +121,7 @@ const monthScheduleEntrySubmenu = new MenuTemplate<Context>(async (ctx) => {
 });
 monthScheduleEntrySubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-const monthScheduleSubmenu = new MenuTemplate<Context>(
+const monthScheduleSubmenu = new MenuTemplate<Scenes.WizardContext>(
   () => `Расписание на ${getDateString()}`
 );
 monthScheduleSubmenu.chooseIntoSubmenu(
