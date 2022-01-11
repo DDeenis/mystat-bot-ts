@@ -1,6 +1,6 @@
 import MystatAPI from "mystat-api";
 import { MystatUserData } from "mystat-api/dist/types";
-import { logger } from "../logger/logger.js";
+import { logger } from "../helpers/logger.js";
 
 type ChatId = number;
 
@@ -8,7 +8,6 @@ export class UserStore {
   users: Map<ChatId, MystatAPI>;
 
   constructor() {
-    logger.log("User store constructor");
     this.users = new Map<ChatId, MystatAPI>();
   }
 

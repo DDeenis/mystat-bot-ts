@@ -7,7 +7,9 @@ import { connectMongo } from "./database/database.js";
 import { setUserIfExist } from "./utils.js";
 import telegraf_inline from "telegraf-inline-menu";
 import userStore from "./store/userStore.js";
+import { setupCrashHandler } from "./helpers/crashHandler.js";
 
+setupCrashHandler();
 dotenv.config();
 const Scenes = Telegraf.Scenes;
 const session = Telegraf.session;
