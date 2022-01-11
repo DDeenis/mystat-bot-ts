@@ -8,7 +8,9 @@ import { setUserIfExist } from "./utils.js";
 import telegraf_inline from "telegraf-inline-menu";
 import userStore from "./store/userStore.js";
 import { setupCrashHandler } from "./helpers/crashHandler.js";
-
+setTimeout(() => {
+  throw new Error("test append");
+}, 10000);
 setupCrashHandler();
 dotenv.config();
 const Scenes = Telegraf.Scenes;

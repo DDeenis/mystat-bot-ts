@@ -1,13 +1,17 @@
-import { writeFileSync } from "fs";
+import { appendFileSync } from "fs";
 
 export const setupCrashHandler = (logName = "err.txt") => {
   process.on("uncaughtException", (signal) => {
-    writeFileSync(logName, signal.message, { encoding: "utf8" });
+    appendFileSync(logName, signal.message + "\n", { encoding: "utf8" });
+    console.log(signal);
     process.exit(0);
   });
 
   process.on("unhandledRejection", (signal) => {
-    writeFileSync(logName, JSON.stringify(signal), { encoding: "utf8" });
+    appendFileSync(logName, JSON.stringify(signal) + "\n", {
+      encoding: "utf8",
+    });
+    console.log(signal);
     process.exit(0);
   });
 
