@@ -44,6 +44,7 @@ async function getHomeworksByMatch(ctx: any): Promise<unknown[]> {
       homeworkStatus,
       getSessionValue<number>(ctx, "page") || 1
     );
+  console.log(homeworks);
   setSessionValue<unknown[]>(ctx, "homeworks", homeworks?.data);
 
   return homeworks?.data;

@@ -44,9 +44,8 @@ const newsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
     );
   }
 
-  const convertedBody = htmlConverter.turndown(
-    (newsEntryDetails.data as any)?.text_bbs
-  );
+  const body: string = (newsEntryDetails.data as any)?.text_bbs;
+  const convertedBody = htmlConverter.turndown(body);
   const newsEntryFormatted = formatMessage(
     `✏️ Тема: ${newsEntry?.theme}`,
     `📅 Дата: ${newsEntry?.time}`,

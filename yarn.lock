@@ -773,9 +773,9 @@ flatted@^3.1.0:
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
 
 follow-redirects@^1.14.0:
-  version "1.14.6"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.6.tgz#8cfb281bbc035b3c067d6cd975b0f6ade6e855cd"
-  integrity sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
+  integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
 
 from@~0:
   version "0.1.7"
@@ -948,11 +948,6 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.npmjs.org/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz"
   integrity sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
 
-jwt-decode@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
-  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
-
 kareem@2.3.2:
   version "2.3.2"
   resolved "https://registry.npmjs.org/kareem/-/kareem-2.3.2.tgz"
@@ -1109,13 +1104,12 @@ ms@2.1.2:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-mystat-api@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/mystat-api/-/mystat-api-3.0.5.tgz#dbe076128a4df25205072bfc9d5091c48c2b0eb1"
-  integrity sha512-ieKLfi7J++CZYq0kFhm+TAE2b3NSFz4GuhxiCF0qH7X0yGOu+I6YEBg5Rz0DXh1FvDd2Jji+lswduhoMIuU7tw==
+mystat-api@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/mystat-api/-/mystat-api-3.0.8.tgz#6101ae6960cf1eee1c8fd1b3ea6ee8ac3010ea04"
+  integrity sha512-gp5QANYmOksOoWliU6gqh3iNPcX7+bmGYKnohZhqKmSuw5hFNfNgf66k48SDlw15zhQV7P8gDLD3WlFVQryhgQ==
   dependencies:
     axios "^0.21.1"
-    jwt-decode "^3.1.2"
 
 natural-compare@^1.4.0:
   version "1.4.0"
