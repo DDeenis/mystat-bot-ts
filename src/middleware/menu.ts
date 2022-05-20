@@ -47,7 +47,7 @@ menuTemplate.interact("🚪Выйти", "logout", {
     const chatId = ctx.chat?.id;
 
     if (chatId) {
-      userStore.set(chatId, { username: "", password: "" });
+      userStore.remove(chatId);
       await deleteUser(chatId);
       await ctx.reply(
         "Вы вышли из аккаунта. Используйте /login чтобы войти снова."

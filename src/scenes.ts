@@ -47,8 +47,9 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
     const authData = userApi.authUser();
     const isAuth = (await authData).success;
     const chatId = ctx.chat?.id;
+    const userId = ctx.from?.id;
 
-    if (!chatId) {
+    if (!chatId || !userId) {
       await ctx.reply("🚫 Что-то пошло не так.");
       return await ctx.scene.leave();
     }
@@ -64,6 +65,7 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
         username: userData.username,
         password: userData.password,
         chatId,
+        userId,
       });
       userStore.set(chatId, userData);
     }

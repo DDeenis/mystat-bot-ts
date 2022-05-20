@@ -1,14 +1,16 @@
 import MystatAPI from "mystat-api";
 import { MystatUserData } from "mystat-api/dist/types";
-import { logger } from "../helpers/logger.js";
+import { ConsoleLogger } from "../helpers/logger.js";
 
 type ChatId = number;
 
 export class UserStore {
   users: Map<ChatId, MystatAPI>;
+  logger: ConsoleLogger;
 
   constructor() {
     this.users = new Map<ChatId, MystatAPI>();
+    this.logger = new ConsoleLogger("[STORE]");
   }
 
   get(chatId?: ChatId) {
@@ -19,14 +21,14 @@ export class UserStore {
     const result = this.users.get(chatId);
 
     if (!result) {
-      logger.warning("Can't get user with chatId: " + chatId);
+      this.logger.warning("Can't get user with chatId: " + chatId);
     }
 
     return this.users.get(chatId);
   }
 
   set(chatId: ChatId, userData: MystatUserData) {
-    logger.log("Create user with chatId: " + chatId);
+    this.logger.log("Create user with chatId: " + chatId);
     this.users.set(chatId, new MystatAPI(userData));
   }
 
@@ -35,7 +37,7 @@ export class UserStore {
   }
 
   remove(chatId: ChatId) {
-    logger.log("Remove user with chatId: " + chatId);
+    this.logger.log("Remove user with chatId: " + chatId);
     this.users.delete(chatId);
   }
 }

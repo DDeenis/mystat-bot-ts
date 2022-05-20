@@ -24,6 +24,7 @@ export const connectMongo = async (connectionString: string): Promise<void> => {
 
 export const createUser = async (user: IUser): Promise<void> => {
   ensureConnection();
+  console.log(user);
 
   try {
     await UserModel.findOneAndUpdate(
@@ -58,14 +59,14 @@ export const getUserByChatId = async (
 ): Promise<IUser | undefined> => {
   ensureConnection();
 
-  return (await UserModel.findOne({ chatId }))?.toObject();
+  const user = await UserModel.findOne({ chatId });
+  return user?.toObject();
 };
 
 export const isUserExist = async (chatId: number): Promise<boolean> => {
   try {
     const result = await getUserByChatId(chatId);
-
-    return result !== undefined;
+    return Boolean(result);
   } catch (error) {
     console.log(error);
   }
@@ -79,7 +80,6 @@ const ensureConnection = async () => {
   if (!token) {
     throw new Error("Bot token is not provided");
   }
-  console.log(mongoose.connections.length);
 
   if (mongoose.connections.length < 1) {
     await connectMongo(token);

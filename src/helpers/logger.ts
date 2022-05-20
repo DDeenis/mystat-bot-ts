@@ -1,14 +1,32 @@
-class ConsoleLogger {
+export class ConsoleLogger {
+  prefix?: string;
+
+  constructor(prefix?: string) {
+    this.prefix = prefix;
+  }
+
+  setPrefix(prefix: string) {
+    this.prefix = prefix;
+  }
+
+  formatMessage(logLevel: string, message: string) {
+    const parts = [logLevel, message];
+
+    if (this.prefix) parts.splice(0, 0, this.prefix);
+
+    return parts.join(" ");
+  }
+
   log(message: string) {
-    console.log(message);
+    console.log(this.formatMessage("[INFO]", message));
   }
 
   warning(message: string) {
-    console.warn("[WARNING] " + message);
+    console.warn(this.formatMessage("[WARNING]", message));
   }
 
-  error(message?: string) {
-    console.error("[ERROR] " + message);
+  error(message: string) {
+    console.error(this.formatMessage("[ERROR]", message));
   }
 }
 
