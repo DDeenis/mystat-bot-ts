@@ -29,7 +29,9 @@ export class UserStore {
 
   set(chatId: ChatId, userData: MystatUserData) {
     this.logger.log("Create user with chatId: " + chatId);
-    this.users.set(chatId, new MystatAPI(userData));
+    const api = new MystatAPI(userData);
+    api._updateAccessToken();
+    this.users.set(chatId, api);
   }
 
   has(chatId: ChatId) {
