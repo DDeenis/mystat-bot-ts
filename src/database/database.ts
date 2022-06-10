@@ -24,7 +24,6 @@ export const connectMongo = async (connectionString: string): Promise<void> => {
 
 export const createUser = async (user: IUser): Promise<void> => {
   ensureConnection();
-  console.log(user);
 
   try {
     await UserModel.findOneAndUpdate(
