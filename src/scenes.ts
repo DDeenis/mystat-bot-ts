@@ -44,8 +44,9 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
       password: (ctx as any).session.password,
     };
     const userApi = new MystatAPI(userData);
-    const authData = userApi.authUser();
-    const isAuth = (await authData).success;
+    const authData = await userApi.authUser();
+
+    const isAuth = !authData.data?.[0]?.message;
     const chatId = ctx.chat?.id;
     const userId = ctx.from?.id;
 

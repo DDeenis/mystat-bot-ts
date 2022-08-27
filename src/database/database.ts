@@ -45,8 +45,6 @@ export const isUserExist = async (chatId: number): Promise<boolean> => {
 export const createUser = async (user: IUser): Promise<void> => {
   const isUpdate = await isUserExist(user.chatId);
 
-  console.log(isUpdate, user);
-
   if (isUpdate) {
     const { error } = await supabase
       .from(usersTable)
@@ -58,9 +56,7 @@ export const createUser = async (user: IUser): Promise<void> => {
     return;
   }
 
-  const { error } = await supabase
-    .from(usersTable)
-    .insert(user, { returning: "minimal" });
+  const { error } = await supabase.from(usersTable).insert(user);
 
   if (error) throw error;
 };

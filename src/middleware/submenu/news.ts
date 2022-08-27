@@ -1,5 +1,4 @@
 import telegraf_inline from "telegraf-inline-menu";
-import TurndownService from "turndown";
 import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
 import {
@@ -8,10 +7,10 @@ import {
   getSessionValue,
   setSessionValue,
 } from "../../utils.js";
+import { convert } from "html-to-text";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
-const htmlConverter = new TurndownService();
 
 const newsField = "news";
 const formatNews = (n: string): string => cropString(n, 20);
@@ -45,16 +44,28 @@ const newsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   }
 
   const body: string = (newsEntryDetails.data as any)?.text_bbs;
-  const convertedBody = htmlConverter.turndown(body);
+  let convertedBody = convert(body)
+    .split("\n")
+    .filter((val) => Boolean(val))
+    .join("\n\n");
+
+  const possibleEncryptedImgStart = convertedBody.indexOf("[data:image");
+
+  if (possibleEncryptedImgStart !== -1) {
+    convertedBody = convertedBody.substring(0, possibleEncryptedImgStart);
+  }
+
   const newsEntryFormatted = formatMessage(
     `✏️ Тема: ${newsEntry?.theme}`,
     `📅 Дата: ${newsEntry?.time}`,
     convertedBody
+      .split("\n")
+      .filter((val) => Boolean(val))
+      .join("\n\n")
   );
 
   return {
     text: newsEntryFormatted,
-    parse_mode: "Markdown",
   };
 });
 newsEntrySubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
