@@ -1,65 +1,34 @@
-import mongoose from "mongoose";
-import { IUser, UserModel } from "./entity/User.js";
+import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
+import { IUser } from "./entity/User";
 
 dotenv.config();
 
-export const connectMongo = async (connectionString: string): Promise<void> => {
-  try {
-    await mongoose.connect(
-      connectionString,
-      {
-        useCreateIndex: true,
-        keepAlive: true,
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        useFindAndModify: false,
-      },
-      (err) => console.log(err ? err : "Mongoose is connected")
-    );
-  } catch (error) {
-    console.log("Failed to connect mongoose", error);
-  }
-};
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
-export const createUser = async (user: IUser): Promise<void> => {
-  ensureConnection();
+if (!supabaseUrl) {
+  throw new Error("No supabase url provided");
+}
 
-  try {
-    await UserModel.findOneAndUpdate(
-      { chatId: user.chatId },
-      user,
-      { upsert: true },
-      (err) => {
-        if (err) {
-          console.log("Error while creating/updating user: " + err);
-        } else {
-          console.log("User created/updated successfully");
-        }
-      }
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
+if (!supabaseKey) {
+  throw new Error("No supabase key provided");
+}
 
-export const deleteUser = async (chatId: number): Promise<void> => {
-  ensureConnection();
-
-  try {
-    await UserModel.deleteOne({ chatId });
-  } catch (error) {
-    console.log(error);
-  }
-};
+const supabase = createClient(supabaseUrl, supabaseKey);
+const usersTable = "users";
 
 export const getUserByChatId = async (
   chatId: number
 ): Promise<IUser | undefined> => {
-  ensureConnection();
+  const { data, error } = await supabase
+    .from(usersTable)
+    .select("*")
+    .eq("chatId", chatId);
 
-  const user = await UserModel.findOne({ chatId });
-  return user?.toObject();
+  if (error) throw error;
+
+  return data?.[0] as IUser | undefined;
 };
 
 export const isUserExist = async (chatId: number): Promise<boolean> => {
@@ -73,14 +42,34 @@ export const isUserExist = async (chatId: number): Promise<boolean> => {
   return false;
 };
 
-const ensureConnection = async () => {
-  const token = process.env?.BOT_TOKEN;
+export const createUser = async (user: IUser): Promise<void> => {
+  const isUpdate = await isUserExist(user.chatId);
 
-  if (!token) {
-    throw new Error("Bot token is not provided");
+  console.log(isUpdate, user);
+
+  if (isUpdate) {
+    const { error } = await supabase
+      .from(usersTable)
+      .update(user)
+      .eq("chatId", user.chatId);
+
+    if (error) throw error;
+
+    return;
   }
 
-  if (mongoose.connections.length < 1) {
-    await connectMongo(token);
-  }
+  const { error } = await supabase
+    .from(usersTable)
+    .insert(user, { returning: "minimal" });
+
+  if (error) throw error;
+};
+
+export const deleteUser = async (chatId: number): Promise<void> => {
+  const { error } = await supabase
+    .from(usersTable)
+    .delete()
+    .eq("chatId", chatId);
+
+  if (error) throw error;
 };

@@ -37,7 +37,7 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
     (ctx.session as any).password = password;
 
     ctx.deleteMessage(ctx.message?.message_id); // Deleting password so it won't be in chat history
-    ctx.reply("🔍 Обработка информации");
+    await ctx.reply("🔍 Обработка информации");
 
     const userData: MystatUserData = {
       username: (ctx as any).session.username,
@@ -65,7 +65,6 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
         username: userData.username,
         password: userData.password,
         chatId,
-        userId,
       });
       userStore.set(chatId, userData);
     }
