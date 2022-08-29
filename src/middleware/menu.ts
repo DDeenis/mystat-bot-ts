@@ -8,6 +8,7 @@ import groupSubmenu from "./submenu/group.js";
 import homeworkSubmenu from "./submenu/homework.js";
 import newsSubmenu from "./submenu/news.js";
 import personalInfoSubmenu from "./submenu/personalInfo.js";
+import botInfoSubmenu from "./submenu/botInfo.js";
 import {
   monthScheduleSubmenu,
   scheduleTodaySubmenu,
@@ -42,6 +43,7 @@ menuTemplate.submenu("⚰️Все экзамены", "all-exams", allExamsSubme
 menuTemplate.submenu("📄Новости", "news", newsSubmenu);
 menuTemplate.submenu("⛏Группа", "grp", groupSubmenu);
 menuTemplate.submenu("🖨Информация о себе", "p-info", personalInfoSubmenu);
+menuTemplate.submenu("🤡О боте", "bot-info", botInfoSubmenu);
 menuTemplate.interact("🚪Выйти", "logout", {
   do: async (ctx) => {
     const chatId = ctx.chat?.id;
