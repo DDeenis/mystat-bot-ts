@@ -60,6 +60,7 @@ const selectedHomeworkListSubmenu = new MenuTemplate<any>(
 selectedHomeworkListSubmenu.manualRow(async (ctx: Scenes.WizardContext) => {
   const homeworks = await getHomeworksByMatch(ctx);
   setSessionValue<number>(ctx, "page", 0);
+  console.log(homeworks);
 
   const format = (h: any) => ({
     text: h.name_spec,
@@ -80,6 +81,8 @@ selectedHomeworkListSubmenu.manualAction(
     const id: number = parseInt(parts[parts.length - 1]);
     const homeworkMenuPath: string =
       ctx.update.callback_query.data.split(/\d+/)[0]; // 'menu/hw/hw-opt:{SMTH}/hw-list:' w/o id
+    console.log(ctx.update.callback_query.data, homeworkMenuPath);
+
     const homework = getSessionValue<any[]>(ctx, "homeworks")?.find(
       (h) => h.id === id
     );

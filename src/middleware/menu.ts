@@ -6,13 +6,14 @@ import allExamsSubmenu from "./submenu/allExams.js";
 import futureExamsSubmenu from "./submenu/futureExams.js";
 import groupSubmenu from "./submenu/group.js";
 import homeworkSubmenu from "./submenu/homework.js";
-import newsSubmenu from "./submenu/news.js";
-import personalInfoSubmenu from "./submenu/personalInfo.js";
+// import newsSubmenu from "./submenu/news.js";
+// import personalInfoSubmenu from "./submenu/personalInfo.js";
 import botInfoSubmenu from "./submenu/botInfo.js";
 import {
   monthScheduleSubmenu,
   scheduleTodaySubmenu,
   scheduleTomorrowSubmenu,
+  scheduleWeekSubmenu,
 } from "./submenu/schedule.js";
 
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -33,6 +34,11 @@ menuTemplate.submenu(
   scheduleTomorrowSubmenu
 );
 menuTemplate.submenu(
+  "📅Расписание на неделю",
+  "schedule-week",
+  scheduleWeekSubmenu
+);
+menuTemplate.submenu(
   "📅Расписание на месяц",
   "schedule-month",
   monthScheduleSubmenu
@@ -40,9 +46,9 @@ menuTemplate.submenu(
 menuTemplate.submenu("✉️Домашние задания", "hw", homeworkSubmenu);
 menuTemplate.submenu("🕯Будущие экзамены", "future-exams", futureExamsSubmenu);
 menuTemplate.submenu("⚰️Все экзамены", "all-exams", allExamsSubmenu);
-menuTemplate.submenu("📄Новости", "news", newsSubmenu);
+// menuTemplate.submenu("📄Новости", "news", newsSubmenu);
 menuTemplate.submenu("⛏Группа", "grp", groupSubmenu);
-menuTemplate.submenu("🖨Информация о себе", "p-info", personalInfoSubmenu);
+// menuTemplate.submenu("🖨Информация о себе", "p-info", personalInfoSubmenu);
 menuTemplate.submenu("🤡О боте", "bot-info", botInfoSubmenu);
 menuTemplate.interact("🚪Выйти", "logout", {
   do: async (ctx) => {
