@@ -95,7 +95,9 @@ selectedHomeworkListSubmenu.manualAction(
         `❕ Сдать до: ${homework?.completion_time}`,
         `✒️ Комментарий: ${homework?.comment}`,
         `📁 Путь к файлу: ${homework?.file_path}`,
-        `📂 Путь к загруженному файлу: ${homework?.homework_stud?.file_path}`,
+        `📂 Путь к загруженному файлу: ${
+          homework?.homework_stud?.file_path || "Нет ссылки"
+        }`,
         `✅ Проверенно: ${
           homework?.homework_stud?.creation_time || "Нет информации"
         }`,
