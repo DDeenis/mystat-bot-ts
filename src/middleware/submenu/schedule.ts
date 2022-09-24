@@ -193,15 +193,6 @@ const scheduleWeekSubmenu = new MenuTemplate<Scenes.WizardContext>(
     } else {
       return "❗️ Сообщение оказалось слишком длинным. Попробуйте посмотреть отдельно по дням.";
     }
-
-    // const partsByDay = msg.split(newmsgSymbol).filter((s) => !!s);
-
-    // for (const message of partsByDay) {
-    //   await ctx.replyWithMarkdown(message);
-    // }
-    // await ctx.reply("Вернутся в меню 👉 /menu");
-
-    // return "Расписание на неделю";
   }
 );
 scheduleWeekSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));

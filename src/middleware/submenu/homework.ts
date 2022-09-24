@@ -94,14 +94,13 @@ selectedHomeworkListSubmenu.manualAction(
         `📅 Дата выдачи: ${homework?.creation_time}`,
         `❕ Сдать до: ${homework?.completion_time}`,
         `✒️ Комментарий: ${homework?.comment}`,
-        `📁 Путь к файлу: [ссылка](${homework?.file_path})`,
-        `📂 Путь к загруженному файлу: [ссылка](${homework?.homework_stud?.file_path})`,
+        `📁 Путь к файлу: ${homework?.file_path}`,
+        `📂 Путь к загруженному файлу: ${homework?.homework_stud?.file_path}`,
         `✅ Проверенно: ${
           homework?.homework_stud?.creation_time || "Нет информации"
         }`,
         `🎉 Оценка: ${homework?.homework_stud?.mark || "Нет информации"}`
-      ),
-      { parse_mode: "Markdown" }
+      )
     );
 
     ctx.editMessageReplyMarkup({
