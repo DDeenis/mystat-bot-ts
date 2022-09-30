@@ -104,10 +104,6 @@ const getWeekScheduleMarkdown = async (
   let scheduleFormatted = "";
   for (const dayOfWeek of weekDays) {
     scheduleFormatted += `*${getDayOfWeek(new Date(dayOfWeek).getDay())}:*\n`;
-    // scheduleFormatted += `*Расписание на ${dayOfWeek
-    //   .split("-")
-    //   .reverse()
-    //   .join(".")}*\n\n`;
     const scheduleEntries = scheduleWeekDays.get(dayOfWeek) as any[];
 
     if (scheduleEntries.length !== 0) {
