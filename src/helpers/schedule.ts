@@ -13,7 +13,17 @@ const months = [
   "Декабрь",
 ];
 
-const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const weekDays = [
+  "Воскресенье",
+  "Понедельник",
+  "Вторник",
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
+];
+const weekDaysShort = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
 export const getMonthName = (month: number) => months[month];
 export const getDayOfWeek = (day: number) => weekDays[day];
+export const getDayOfWeekShort = (day: number) => weekDaysShort[day];

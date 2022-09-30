@@ -14,6 +14,10 @@ export function getSessionValue<T>(ctx: any, fieldName: string): T {
   return ctx.session[fieldName] as T;
 }
 
+export function clearSessionValue(ctx: any, fieldName: string) {
+  setSessionValue(ctx, fieldName, undefined);
+}
+
 export function formatMessage(...parts: string[]): string {
   return [...parts, "\n"].join("\n");
 }

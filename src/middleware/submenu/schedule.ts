@@ -6,7 +6,11 @@ import {
   getSessionValue,
   setSessionValue,
 } from "../../utils.js";
-import { getDayOfWeek, getMonthName } from "../../helpers/schedule.js";
+import {
+  getDayOfWeek,
+  getDayOfWeekShort,
+  getMonthName,
+} from "../../helpers/schedule.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -42,14 +46,8 @@ const formatSchedule = (scheduleEntry: any) => {
 const getScheduleFormatted = async (
   ctx: Scenes.WizardContext,
   title: string,
-  day?: number
+  date: Date = new Date()
 ): Promise<string> => {
-  const date = new Date();
-
-  if (day) {
-    date.setDate(day);
-  }
-
   const schedule = await userStore.get(ctx.chat?.id)?.getScheduleByDate(date);
   let scheduleFormatted = "";
 
@@ -105,10 +103,11 @@ const getWeekScheduleMarkdown = async (
 
   let scheduleFormatted = "";
   for (const dayOfWeek of weekDays) {
-    scheduleFormatted += `*Расписание на ${dayOfWeek
-      .split("-")
-      .reverse()
-      .join(".")}*\n\n`;
+    scheduleFormatted += `*${getDayOfWeek(new Date(dayOfWeek).getDay())}:*\n`;
+    // scheduleFormatted += `*Расписание на ${dayOfWeek
+    //   .split("-")
+    //   .reverse()
+    //   .join(".")}*\n\n`;
     const scheduleEntries = scheduleWeekDays.get(dayOfWeek) as any[];
 
     if (scheduleEntries.length !== 0) {
@@ -134,31 +133,35 @@ const getDaysArray = async (
   date: Date,
   ctx: Scenes.WizardContext
 ): Promise<string[]> => {
-  date.setDate(1);
+  // date.setDate(1);
+  const dateCopy = new Date(date);
+  dateCopy.setDate(1);
+
   const totalDays = daysInMonth(date.getFullYear(), date.getMonth() + 1);
   const btnsPerRow = 7;
   // if month has 31 day and starts at saturday or sunday one more row needed
-  const rows = date.getDay() < 6 ? 5 : totalDays < 31 ? 5 : 6;
+  const rows = dateCopy.getDay() < 6 ? 5 : totalDays < 31 ? 5 : 6;
+  // const rows = totalDays < 31 ? 5 : 6;
   const totalButtons = btnsPerRow * rows;
   const days: string[] = [];
   const schedule = await userStore.get(ctx.chat?.id)?.getMonthSchedule(date);
 
   // week days names
   for (let i = 0; i < 7; i++) {
-    days.push(getDayOfWeek(i));
+    days.push(getDayOfWeekShort(i));
   }
 
   // empty buttons before
-  date.setDate(1);
-  for (let count = 0; count < date.getDay() - 1; count++) {
+  dateCopy.setDate(1);
+  for (let count = 0; count < dateCopy.getDay() - 1; count++) {
     days.push(" ");
   }
 
   // actual buttons
   for (let count = 0; count < totalDays; count++) {
-    date.setDate(count + 1);
+    dateCopy.setDate(count + 1);
 
-    const currentDate = formatDate(date);
+    const currentDate = formatDate(dateCopy);
 
     if (schedule?.data.some((elem: any) => elem.date === currentDate)) {
       days.push("🟢" + String(count + 1));
@@ -168,10 +171,10 @@ const getDaysArray = async (
   }
 
   // empty buttons after
-  date.setDate(1);
+  dateCopy.setDate(1);
   for (
     let count = 0;
-    count < totalButtons - totalDays - date.getDay() + 1;
+    count < totalButtons - totalDays - dateCopy.getDay() + 1;
     count++
   ) {
     days.push(" ");
@@ -186,12 +189,11 @@ const scheduleTodaySubmenu = new MenuTemplate<Scenes.WizardContext>(
 scheduleTodaySubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
 const scheduleTomorrowSubmenu = new MenuTemplate<Scenes.WizardContext>(
-  async (ctx) =>
-    await getScheduleFormatted(
-      ctx,
-      "Раписание на завтра",
-      new Date().getDate() + 1
-    )
+  async (ctx) => {
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    return await getScheduleFormatted(ctx, "Раписание на завтра", date);
+  }
 );
 scheduleTomorrowSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
@@ -214,15 +216,23 @@ scheduleWeekSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 const monthScheduleEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   const day = ctx.match[1].match(/\d+| /)?.[0]; // extract number or space symbol
   const dayParsed = parseInt(day);
+  const date = new Date();
+  const currentMonth = getSessionValue<number>(ctx, scheduleMonthKey);
 
   if (!dayParsed) {
     return "🎉 Нет пар";
   }
 
+  if (currentMonth) {
+    date.setMonth(currentMonth);
+  }
+
+  date.setDate(dayParsed);
+
   return await getScheduleFormatted(
     ctx,
-    `Расписание на ${day}.${getDateString()}`,
-    parseInt(day)
+    `Расписание на ${day}.${getDateString(date)}`,
+    date
   );
 });
 monthScheduleEntrySubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
@@ -267,6 +277,11 @@ monthScheduleSubmenu.interact("<", "prevMonth", {
 
     return true;
   },
+  hide: (ctx) => {
+    const currentMonth =
+      getSessionValue<number>(ctx, scheduleMonthKey) ?? new Date().getMonth();
+    return currentMonth <= 0;
+  },
 });
 monthScheduleSubmenu.interact(">", "nextMonth", {
   do: (ctx) => {
@@ -279,6 +294,11 @@ monthScheduleSubmenu.interact(">", "nextMonth", {
     setSessionValue(ctx, scheduleMonthKey, newMonth);
 
     return true;
+  },
+  hide: (ctx) => {
+    const currentMonth =
+      getSessionValue<number>(ctx, scheduleMonthKey) ?? new Date().getMonth();
+    return currentMonth >= maxMonths;
   },
   joinLastRow: true,
 });

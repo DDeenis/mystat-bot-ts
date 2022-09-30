@@ -1547,9 +1547,9 @@ table@^6.0.9:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
 
-telegraf-inline-menu@^6.2.1:
+telegraf-inline-menu@^6.3.0:
   version "6.3.0"
-  resolved "https://registry.npmjs.org/telegraf-inline-menu/-/telegraf-inline-menu-6.3.0.tgz"
+  resolved "https://registry.yarnpkg.com/telegraf-inline-menu/-/telegraf-inline-menu-6.3.0.tgz#e9cedb2086f482e9d95e3f03def6895cd69928ff"
   integrity sha512-5n2mV8BS1mRGminS6nfQblfrNINBgFrWpyWre0GXtAjLhj2rG8ERynGysQ7oOh7pSWrewQz8AeAU/NVRCXwfDw==
   dependencies:
     typegram "^3.0.2"
