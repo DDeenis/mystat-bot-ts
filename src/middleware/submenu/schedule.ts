@@ -17,7 +17,7 @@ const MenuTemplate = telegraf_inline.MenuTemplate;
 
 // const newmsgSymbol = "!new";
 const nextMsgSymbol = "\n";
-const maxMsgLength = 9500;
+const maxMsgLength = 4250;
 const dateFormatOptions: Intl.DateTimeFormatOptions = {
   year: "numeric",
   month: "2-digit",
@@ -79,25 +79,50 @@ const getCurrentWeek = () => {
   return dates;
 };
 
+const maxMonths = 11;
 const getWeekScheduleMarkdown = async (
   ctx: Scenes.WizardContext
 ): Promise<string> => {
-  const weekDays = getCurrentWeek();
-  const schedule = await userStore
-    .get(ctx.chat?.id)
-    ?.getMonthSchedule(new Date());
+  const currentMonth = new Date();
+  const lastMonth = new Date();
+  const lastMonthNum =
+    lastMonth.getMonth() - 1 > 0 ? lastMonth.getMonth() - 1 : maxMonths;
+  lastMonth.setMonth(lastMonthNum);
 
-  if (!schedule || !schedule.success) {
-    return "🚫 При получении расписания возникла ошибка: " + schedule?.error;
-  } else if (schedule.data.length === 0) {
+  if (lastMonthNum == maxMonths) {
+    lastMonth.setFullYear(lastMonth.getFullYear() - 1);
+  }
+
+  const weekDays = getCurrentWeek();
+  const currentMonthSchedule = await userStore
+    .get(ctx.chat?.id)
+    ?.getMonthSchedule(currentMonth);
+  const lastMontSchedule = await userStore
+    .get(ctx.chat?.id)
+    ?.getMonthSchedule(lastMonth);
+
+  if (
+    !currentMonthSchedule ||
+    !lastMontSchedule ||
+    !currentMonthSchedule.success ||
+    !lastMontSchedule.success
+  ) {
+    return (
+      "🚫 При получении расписания возникла ошибка: " +
+      [currentMonthSchedule?.error, lastMontSchedule?.error].join("\n")
+    );
+  } else if (
+    currentMonthSchedule.data.length === 0 &&
+    lastMontSchedule.data.length === 0
+  ) {
     return "🎉 Нет пар";
   }
 
+  const schedule = [...currentMonthSchedule.data, ...lastMontSchedule.data];
+
   const scheduleWeekDays = new Map<string, any[]>();
   for (const dayOfWeek of weekDays) {
-    const scheduleEntries = schedule.data.filter(
-      (s: any) => s.date === dayOfWeek
-    );
+    const scheduleEntries = schedule.filter((s: any) => s.date === dayOfWeek);
     scheduleWeekDays.set(dayOfWeek, scheduleEntries);
   }
 
@@ -260,7 +285,6 @@ monthScheduleSubmenu.chooseIntoSubmenu(
 );
 
 const scheduleMonthKey = "scheduleMonthDate";
-const maxMonths = 11;
 monthScheduleSubmenu.interact("<", "prevMonth", {
   do: (ctx) => {
     const currentMonth =
