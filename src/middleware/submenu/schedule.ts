@@ -11,6 +11,7 @@ import {
   getDayOfWeekShort,
   getMonthName,
 } from "../../helpers/schedule.js";
+import { MystatResponse } from "mystat-api/dist/types.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -83,42 +84,23 @@ const maxMonths = 11;
 const getWeekScheduleMarkdown = async (
   ctx: Scenes.WizardContext
 ): Promise<string> => {
-  const currentMonth = new Date();
-  const lastMonth = new Date();
-  const lastMonthNum =
-    lastMonth.getMonth() - 1 > 0 ? lastMonth.getMonth() - 1 : maxMonths;
-  lastMonth.setMonth(lastMonthNum);
-
-  if (lastMonthNum == maxMonths) {
-    lastMonth.setFullYear(lastMonth.getFullYear() - 1);
-  }
-
+  const api = userStore.get(ctx.chat?.id);
   const weekDays = getCurrentWeek();
-  const currentMonthSchedule = await userStore
-    .get(ctx.chat?.id)
-    ?.getMonthSchedule(currentMonth);
-  const lastMontSchedule = await userStore
-    .get(ctx.chat?.id)
-    ?.getMonthSchedule(lastMonth);
 
-  if (
-    !currentMonthSchedule ||
-    !lastMontSchedule ||
-    !currentMonthSchedule.success ||
-    !lastMontSchedule.success
-  ) {
-    return (
-      "🚫 При получении расписания возникла ошибка: " +
-      [currentMonthSchedule?.error, lastMontSchedule?.error].join("\n")
-    );
-  } else if (
-    currentMonthSchedule.data.length === 0 &&
-    lastMontSchedule.data.length === 0
-  ) {
+  const daysPromises: (Promise<MystatResponse> | undefined)[] = [];
+  for (const day of weekDays) {
+    daysPromises.push(api?.getScheduleByDate(new Date(day)));
+  }
+  const results = await Promise.all(daysPromises);
+  const errorResult = results.find((r) => !r?.success);
+
+  if (errorResult) {
+    return "🚫 При получении расписания возникла ошибка: " + errorResult.error;
+  } else if (results.length === 0) {
     return "🎉 Нет пар";
   }
 
-  const schedule = [...currentMonthSchedule.data, ...lastMontSchedule.data];
+  const schedule = results.flatMap((r) => r?.data as any[]);
 
   const scheduleWeekDays = new Map<string, any[]>();
   for (const dayOfWeek of weekDays) {
