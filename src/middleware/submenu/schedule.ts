@@ -58,7 +58,13 @@ const getScheduleFormatted = async (
     return "🎉 Нет пар";
   }
 
-  for (const scheduleEntry of schedule.data) {
+  // sort items by start time
+  const scheduleItems = schedule.data.sort((a: any, b: any) => {
+    const dateA = Date.parse(`01 Jan 1970 00:${a.started_at} GMT`);
+    const dateB = Date.parse(`01 Jan 1970 00:${b.started_at} GMT`);
+    return dateA - dateB;
+  });
+  for (const scheduleEntry of scheduleItems) {
     scheduleFormatted += formatSchedule(scheduleEntry);
   }
 
