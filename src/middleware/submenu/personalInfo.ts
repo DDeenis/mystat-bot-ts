@@ -18,8 +18,8 @@ const personalInfoSubmenu = new MenuTemplate<Scenes.WizardContext>(
       );
     }
 
-    const i = info.data as any;
-    const s = settings.data as any;
+    const i = info.data;
+    const s = settings.data;
 
     const infoFromatted = formatMessage(
       `📝 ФИО: ${i.full_name}`,

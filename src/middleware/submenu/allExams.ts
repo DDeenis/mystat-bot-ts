@@ -7,6 +7,7 @@ import {
   getSessionValue,
   setSessionValue,
 } from "../../utils.js";
+import { MystatExam } from "mystat-api/dist/types.js";
 
 const formatString = (source: string): string => cropString(source, 20);
 
@@ -20,14 +21,14 @@ const getExamsList = async (ctx: Scenes.WizardContext): Promise<string[]> => {
     return [];
   }
 
-  setSessionValue<any[]>(ctx, "exams", exams.data);
+  setSessionValue<MystatExam[]>(ctx, "exams", exams.data);
 
   return exams.data.map((e: any) => formatString(e.spec));
 };
 
 const allExamsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   const match: string = ctx.match[1];
-  const exam = getSessionValue<any[]>(ctx, "exams").find(
+  const exam = getSessionValue<MystatExam[]>(ctx, "exams").find(
     (e) => formatString(e.spec) === match
   );
 

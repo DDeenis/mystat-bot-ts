@@ -1,4 +1,4 @@
-import { MystatHomeworkStatus } from "mystat-api/dist/types.js";
+import { MystatHomework, MystatHomeworkStatus } from "mystat-api/dist/types.js";
 import telegraf_inline from "telegraf-inline-menu";
 import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
@@ -35,7 +35,7 @@ const homeworkStatusTitles = {
   [HomeworkStatusTypes.Deleted]: MystatHomeworkStatus.Deleted,
 };
 
-async function getHomeworksByMatch(ctx: any): Promise<unknown[]> {
+async function getHomeworksByMatch(ctx: any): Promise<MystatHomework[]> {
   const match: string = ctx.match[1];
   const homeworkStatus = homeworkStatusTitles[match as HomeworkStatusTypes];
   const homeworks = await userStore
@@ -44,9 +44,9 @@ async function getHomeworksByMatch(ctx: any): Promise<unknown[]> {
       homeworkStatus,
       getSessionValue<number>(ctx, "page") || 1
     );
-  setSessionValue<unknown[]>(ctx, "homeworks", homeworks?.data);
+  setSessionValue<MystatHomework[]>(ctx, "homeworks", homeworks?.data ?? []);
 
-  return homeworks?.data;
+  return homeworks?.data ?? [];
 }
 
 const selectedHomeworkSubmenu = new MenuTemplate<any>((ctx) => {
@@ -82,7 +82,7 @@ selectedHomeworkListSubmenu.manualAction(
     const idStartPos = currentPath.lastIndexOf(":");
     const homeworkMenuPath = currentPath.substring(0, idStartPos);
 
-    const homework = getSessionValue<any[]>(ctx, "homeworks")?.find(
+    const homework = getSessionValue<MystatHomework[]>(ctx, "homeworks")?.find(
       (h) => h.id === id
     );
 

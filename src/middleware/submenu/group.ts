@@ -1,3 +1,4 @@
+import { MystatStudentInfo } from "mystat-api/dist/types.js";
 import telegraf_inline from "telegraf-inline-menu";
 import { Context } from "vm";
 import userStore from "../../store/userStore.js";
@@ -23,14 +24,14 @@ const getStudents = async (ctx: Context): Promise<string[]> => {
     return [];
   }
 
-  setSessionValue<any[]>(ctx, studentsField, students.data);
+  setSessionValue<MystatStudentInfo[]>(ctx, studentsField, students.data);
 
   return students.data.map((s: any) => formatStudentName(s.full_name));
 };
 
 const studentSubmenu = new MenuTemplate<Context>(async (ctx) => {
   const match = ctx.match[1];
-  const students = getSessionValue<any[]>(ctx, studentsField);
+  const students = getSessionValue<MystatStudentInfo[]>(ctx, studentsField);
   const student = students.find(
     (s) => formatStudentName(s.full_name) === match
   );

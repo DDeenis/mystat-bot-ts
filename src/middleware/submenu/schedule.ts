@@ -11,7 +11,7 @@ import {
   getDayOfWeekShort,
   getMonthName,
 } from "../../helpers/schedule.js";
-import { MystatResponse } from "mystat-api/dist/types.js";
+import { MystatResponse, MystatScheduleEntry } from "mystat-api/dist/types.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -35,9 +35,9 @@ const formatDate = (
     .slice(0, -1);
 };
 
-const formatSchedule = (scheduleEntry: any) => {
+const formatSchedule = (scheduleEntry: MystatScheduleEntry) => {
   return formatMessage(
-    `✏️ Предмет: ${scheduleEntry?.subject_name}`,
+    `✏️ Предмет: ${scheduleEntry?.subject_name.replace(/[\\[\]]/g, "")}`,
     `💡 Преподаватель: ${scheduleEntry?.teacher_name}`,
     `🗝 Аудитория: ${scheduleEntry?.room_name}`,
     `⏰ Время: ${scheduleEntry?.started_at} - ${scheduleEntry?.finished_at}`
@@ -60,8 +60,8 @@ const getScheduleFormatted = async (
 
   // sort items by start time
   const scheduleItems = schedule.data.sort((a: any, b: any) => {
-    const dateA = Date.parse(`01 Jan 1970 00:${a.started_at} GMT`);
-    const dateB = Date.parse(`01 Jan 1970 00:${b.started_at} GMT`);
+    const dateA = Date.parse(`01 Jan 1970 ${a.started_at}:00 GMT`);
+    const dateB = Date.parse(`01 Jan 1970 ${b.started_at}:00 GMT`);
     return dateA - dateB;
   });
   for (const scheduleEntry of scheduleItems) {
@@ -93,7 +93,10 @@ const getWeekScheduleMarkdown = async (
   const api = userStore.get(ctx.chat?.id);
   const weekDays = getCurrentWeek();
 
-  const daysPromises: (Promise<MystatResponse> | undefined)[] = [];
+  const daysPromises: (
+    | Promise<MystatResponse<MystatScheduleEntry[]>>
+    | undefined
+  )[] = [];
   for (const day of weekDays) {
     daysPromises.push(api?.getScheduleByDate(new Date(day)));
   }
