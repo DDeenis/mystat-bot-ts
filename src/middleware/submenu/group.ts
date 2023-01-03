@@ -26,7 +26,7 @@ const getStudents = async (ctx: Context): Promise<string[]> => {
 
   setSessionValue<MystatStudentInfo[]>(ctx, studentsField, students.data);
 
-  return students.data.map((s: any) => formatStudentName(s.full_name));
+  return students.data.map((s) => formatStudentName(s.full_name));
 };
 
 const studentSubmenu = new MenuTemplate<Context>(async (ctx) => {

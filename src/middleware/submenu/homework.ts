@@ -61,7 +61,7 @@ selectedHomeworkListSubmenu.manualRow(async (ctx: Scenes.WizardContext) => {
   const homeworks = await getHomeworksByMatch(ctx);
   setSessionValue<number>(ctx, "page", 0);
 
-  const format = (h: any) => ({
+  const format = (h: MystatHomework) => ({
     text: h.name_spec,
     relativePath: "hw-list:" + h.id,
   });

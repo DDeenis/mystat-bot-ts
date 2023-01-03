@@ -23,7 +23,7 @@ const getExamsList = async (ctx: Scenes.WizardContext): Promise<string[]> => {
 
   setSessionValue<MystatExam[]>(ctx, "exams", exams.data);
 
-  return exams.data.map((e: any) => formatString(e.spec));
+  return exams.data.map((e) => formatString(e.spec));
 };
 
 const allExamsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {

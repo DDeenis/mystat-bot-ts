@@ -59,7 +59,7 @@ const getScheduleFormatted = async (
   }
 
   // sort items by start time
-  const scheduleItems = schedule.data.sort((a: any, b: any) => {
+  const scheduleItems = schedule.data.sort((a, b) => {
     const dateA = Date.parse(`01 Jan 1970 ${a.started_at}:00 GMT`);
     const dateB = Date.parse(`01 Jan 1970 ${b.started_at}:00 GMT`);
     return dateA - dateB;
@@ -109,20 +109,20 @@ const getWeekScheduleMarkdown = async (
     return "🎉 Нет пар";
   }
 
-  const schedule = results.flatMap((r) => r?.data as any[]);
+  const schedule = results.flatMap((r) => r?.data as MystatScheduleEntry[]);
 
-  const scheduleWeekDays = new Map<string, any[]>();
+  const scheduleWeekDays = new Map<string, MystatScheduleEntry[]>();
   for (const dayOfWeek of weekDays) {
-    const scheduleEntries = schedule.filter((s: any) => s.date === dayOfWeek);
+    const scheduleEntries = schedule.filter((s) => s.date === dayOfWeek);
     scheduleWeekDays.set(dayOfWeek, scheduleEntries);
   }
 
   let scheduleFormatted = "";
   for (const dayOfWeek of weekDays) {
     scheduleFormatted += `*${getDayOfWeek(new Date(dayOfWeek).getDay())}:*\n`;
-    const scheduleEntries = scheduleWeekDays.get(dayOfWeek) as any[];
+    const scheduleEntries = scheduleWeekDays.get(dayOfWeek);
 
-    if (scheduleEntries.length !== 0) {
+    if (scheduleEntries && scheduleEntries.length !== 0) {
       for (const scheduleEntry of scheduleEntries) {
         scheduleFormatted += formatSchedule(scheduleEntry);
       }
@@ -175,7 +175,7 @@ const getDaysArray = async (
 
     const currentDate = formatDate(dateCopy);
 
-    if (schedule?.data.some((elem: any) => elem.date === currentDate)) {
+    if (schedule?.data.some((elem) => elem.date === currentDate)) {
       days.push("🟢" + String(count + 1));
     } else {
       days.push("🔴" + String(count + 1));

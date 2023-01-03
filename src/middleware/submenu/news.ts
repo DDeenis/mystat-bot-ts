@@ -26,7 +26,7 @@ const getNewsList = async (ctx: Scenes.WizardContext): Promise<string[]> => {
 
   setSessionValue<MystatNewsEntry[]>(ctx, newsField, news.data);
 
-  return news.data.map((n: any) => formatNews(n.theme));
+  return news.data.map((n) => formatNews(n.theme));
 };
 
 const newsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
@@ -49,7 +49,7 @@ const newsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
     );
   }
 
-  const body: string = (newsEntryDetails.data as any)?.text_bbs;
+  const body: string = newsEntryDetails.data?.text_bbs;
   let convertedBody = convert(body)
     .split("\n")
     .filter((val) => Boolean(val))
