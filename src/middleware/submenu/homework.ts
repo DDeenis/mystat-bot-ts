@@ -63,7 +63,7 @@ selectedHomeworkListSubmenu.manualRow(async (ctx: Scenes.WizardContext) => {
 
   const format = (h: MystatHomework) => ({
     text: h.name_spec,
-    relativePath: "hw-list:" + h.id,
+    relativePath: h.id.toString(),
   });
 
   return [
@@ -74,9 +74,9 @@ selectedHomeworkListSubmenu.manualRow(async (ctx: Scenes.WizardContext) => {
 });
 
 selectedHomeworkListSubmenu.manualAction(
-  /hw-list:(\d+)$/,
+  /(\d+)$/,
   async (ctx: any, path: string) => {
-    const parts: string[] = path.split(":");
+    const parts: string[] = path.split("/");
     const id: number = parseInt(parts[parts.length - 1]);
     const currentPath: string = ctx.update.callback_query.data;
     const idStartPos = currentPath.lastIndexOf(":");

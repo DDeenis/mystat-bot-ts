@@ -2,6 +2,7 @@ import telegraf_inline from "telegraf-inline-menu";
 import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
 import { formatMessage } from "../../utils.js";
+import { getErrorMessage } from "../../helpers/logger.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -12,10 +13,7 @@ const personalInfoSubmenu = new MenuTemplate<Scenes.WizardContext>(
     const settings = await userStore.get(ctx.chat?.id)?.getUserSettings();
 
     if (!info || !settings || !info.success || !settings.success) {
-      return (
-        "🚫 При получении информации о профиле возникла ошибка: " +
-        (info?.error ? info.error : settings?.error)
-      );
+      return getErrorMessage(info?.error ? info.error : settings?.error);
     }
 
     const i = info.data;

@@ -30,4 +30,7 @@ export class ConsoleLogger {
   }
 }
 
-export const logger = new ConsoleLogger();
+export const getErrorMessage = (error?: string | null) =>
+  `🚫 При выполнении действия возникла ошибка: ${
+    error ?? "Unknown error"
+  }\nСвяжитесь с разработчиками через пункт 'О боте'`;

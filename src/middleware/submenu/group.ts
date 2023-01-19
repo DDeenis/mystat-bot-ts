@@ -1,6 +1,7 @@
 import { MystatStudentInfo } from "mystat-api/dist/types.js";
 import telegraf_inline from "telegraf-inline-menu";
 import { Context } from "vm";
+import { getErrorMessage } from "../../helpers/logger.js";
 import userStore from "../../store/userStore.js";
 import {
   cropString,
@@ -37,7 +38,7 @@ const studentSubmenu = new MenuTemplate<Context>(async (ctx) => {
   );
 
   if (!student) {
-    return "🚫 При получении списка группы возникла ошибка";
+    return getErrorMessage("Not found");
   }
 
   const studentFormatted = formatMessage(

@@ -12,6 +12,7 @@ import {
   getMonthName,
 } from "../../helpers/schedule.js";
 import { MystatResponse, MystatScheduleEntry } from "mystat-api/dist/types.js";
+import { getErrorMessage } from "../../helpers/logger.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -53,7 +54,7 @@ const getScheduleFormatted = async (
   let scheduleFormatted = "";
 
   if (!schedule || !schedule.success) {
-    return "🚫 При получении расписания возникла ошибка: " + schedule?.error;
+    return getErrorMessage(schedule?.error);
   } else if (schedule.data.length === 0) {
     return "🎉 Нет пар";
   }
@@ -104,7 +105,7 @@ const getWeekScheduleMarkdown = async (
   const errorResult = results.find((r) => !r?.success);
 
   if (errorResult) {
-    return "🚫 При получении расписания возникла ошибка: " + errorResult.error;
+    return getErrorMessage(errorResult.error);
   } else if (results.length === 0) {
     return "🎉 Нет пар";
   }
@@ -157,6 +158,11 @@ const getDaysArray = async (
   const totalButtons = btnsPerRow * rows;
   const days: string[] = [];
   const schedule = await userStore.get(ctx.chat?.id)?.getMonthSchedule(date);
+
+  if (!schedule || !schedule.success) {
+    ctx.sendMessage(getErrorMessage(schedule?.error));
+    return [];
+  }
 
   // week days names
   for (let i = 0; i < 7; i++) {

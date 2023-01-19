@@ -9,6 +9,7 @@ import {
 } from "../../utils.js";
 import { convert } from "html-to-text";
 import { MystatNewsEntry } from "mystat-api/dist/types.js";
+import { getErrorMessage } from "../../helpers/logger.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -36,7 +37,7 @@ const newsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   const newsEntry = newsList.find((n) => formatNews(n.theme) === match);
 
   if (!newsEntry) {
-    return "🚫 При получении новостей возникла ошибка: " + "Not found";
+    return getErrorMessage("Not found");
   }
 
   const newsEntryDetails = await userStore
@@ -44,9 +45,7 @@ const newsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
     ?.getNewsDetails(newsEntry.id_bbs);
 
   if (!newsEntryDetails || !newsEntryDetails.success) {
-    return (
-      "🚫 При получении новостей возникла ошибка: " + newsEntryDetails?.error
-    );
+    return getErrorMessage(newsEntryDetails?.error);
   }
 
   const body: string = newsEntryDetails.data?.text_bbs;
