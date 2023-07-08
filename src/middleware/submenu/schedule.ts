@@ -142,7 +142,6 @@ const getDaysArray = async (
   date: Date,
   ctx: Scenes.WizardContext
 ): Promise<string[]> => {
-  // date.setDate(1);
   const dateCopy = new Date(date);
   dateCopy.setDate(1);
 
@@ -167,7 +166,9 @@ const getDaysArray = async (
 
   // empty buttons before
   dateCopy.setDate(1);
-  for (let count = 0; count < dateCopy.getDay() - 1; count++) {
+  const dayOfWeek = dateCopy.getDay();
+  // 0 is sunday so replace 0 with 7
+  for (let count = 0; count < (dayOfWeek == 0 ? 7 : dayOfWeek) - 1; count++) {
     days.push(" ");
   }
 
@@ -238,7 +239,7 @@ const monthScheduleEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   }
 
   if (currentMonth) {
-    date.setMonth(currentMonth);
+    date.setMonth(currentMonth, 1);
   }
 
   date.setDate(dayParsed);
@@ -256,7 +257,7 @@ const monthScheduleSubmenu = new MenuTemplate<Scenes.WizardContext>((ctx) => {
   const currentMonth = getSessionValue<number>(ctx, scheduleMonthKey);
 
   if (currentMonth) {
-    date.setMonth(currentMonth);
+    date.setMonth(currentMonth, 1);
   }
 
   return `${getMonthName(date.getMonth())} ${date.getFullYear()}`;
@@ -268,7 +269,7 @@ monthScheduleSubmenu.chooseIntoSubmenu(
     const currentMonth = getSessionValue<number>(ctx, scheduleMonthKey);
 
     if (currentMonth) {
-      date.setMonth(currentMonth);
+      date.setMonth(currentMonth, 1);
     }
 
     return await getDaysArray(date, ctx);
