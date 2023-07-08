@@ -1,6 +1,7 @@
 import { Scenes } from "telegraf";
 import { getUserByChatId } from "./database/database.js";
 import userStore from "./store/userStore.js";
+import { createClient } from "mystat-api";
 
 export function setSessionValue<T>(
   ctx: any,
@@ -29,7 +30,7 @@ export async function setUserIfExist(
   ctx: Scenes.WizardContext
 ): Promise<string | undefined> {
   const chatId = ctx.chat?.id;
-  const userData = userStore.get(chatId)?.userData;
+  const userData = userStore.get(chatId)?.clientData.loginData;
 
   if (userData?.username && userData?.password) {
     return;
@@ -42,6 +43,13 @@ export async function setUserIfExist(
   const user = await getUserByChatId(chatId);
 
   if (user) {
-    userStore.set(chatId, user);
+    userStore.set(
+      chatId,
+      await createClient({
+        loginData: user,
+        language: "ru",
+        cache: "force-cache",
+      })
+    );
   }
 }

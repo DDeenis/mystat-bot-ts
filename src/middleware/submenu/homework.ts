@@ -1,4 +1,4 @@
-import { MystatHomework, MystatHomeworkStatus } from "mystat-api/dist/types.js";
+import { Homework, HomeworkStatus } from "mystat-api";
 import telegraf_inline from "telegraf-inline-menu";
 import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
@@ -28,14 +28,14 @@ const homeworkStatusList = [
 ];
 
 const homeworkStatusTitles = {
-  [HomeworkStatusTypes.Active]: MystatHomeworkStatus.Active,
-  [HomeworkStatusTypes.Checked]: MystatHomeworkStatus.Checked,
-  [HomeworkStatusTypes.Uploaded]: MystatHomeworkStatus.Uploaded,
-  [HomeworkStatusTypes.Overdue]: MystatHomeworkStatus.Overdue,
-  [HomeworkStatusTypes.Deleted]: MystatHomeworkStatus.Deleted,
+  [HomeworkStatusTypes.Active]: HomeworkStatus.Active,
+  [HomeworkStatusTypes.Checked]: HomeworkStatus.Checked,
+  [HomeworkStatusTypes.Uploaded]: HomeworkStatus.Uploaded,
+  [HomeworkStatusTypes.Overdue]: HomeworkStatus.Overdue,
+  [HomeworkStatusTypes.Deleted]: HomeworkStatus.Deleted,
 };
 
-async function getHomeworksByMatch(ctx: any): Promise<MystatHomework[]> {
+async function getHomeworksByMatch(ctx: any): Promise<Homework[]> {
   const match: string = ctx.match[1];
   const homeworkStatus = homeworkStatusTitles[match as HomeworkStatusTypes];
   const homeworks = await userStore
@@ -44,9 +44,9 @@ async function getHomeworksByMatch(ctx: any): Promise<MystatHomework[]> {
       homeworkStatus,
       getSessionValue<number>(ctx, "page") || 1
     );
-  setSessionValue<MystatHomework[]>(ctx, "homeworks", homeworks?.data ?? []);
+  setSessionValue<Homework[]>(ctx, "homeworks", homeworks ?? []);
 
-  return homeworks?.data ?? [];
+  return homeworks ?? [];
 }
 
 const selectedHomeworkSubmenu = new MenuTemplate<any>((ctx) => {
@@ -61,7 +61,7 @@ selectedHomeworkListSubmenu.manualRow(async (ctx: Scenes.WizardContext) => {
   const homeworks = await getHomeworksByMatch(ctx);
   setSessionValue<number>(ctx, "page", 0);
 
-  const format = (h: MystatHomework) => ({
+  const format = (h: Homework) => ({
     text: h.name_spec,
     relativePath: h.id.toString(),
   });
@@ -82,7 +82,7 @@ selectedHomeworkListSubmenu.manualAction(
     const idStartPos = currentPath.lastIndexOf(":");
     const homeworkMenuPath = currentPath.substring(0, idStartPos);
 
-    const homework = getSessionValue<MystatHomework[]>(ctx, "homeworks")?.find(
+    const homework = getSessionValue<Homework[]>(ctx, "homeworks")?.find(
       (h) => h.id === id
     );
 

@@ -7,7 +7,7 @@ import {
   getSessionValue,
   setSessionValue,
 } from "../../utils.js";
-import { MystatExam } from "mystat-api/dist/types.js";
+import { Exam } from "mystat-api";
 
 const formatString = (source: string): string => cropString(source, 20);
 
@@ -15,20 +15,20 @@ const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
 
 const getExamsList = async (ctx: Scenes.WizardContext): Promise<string[]> => {
-  const exams = await userStore.get(ctx.chat?.id)?.getExams();
+  const exams = await userStore.get(ctx.chat?.id)?.getAllExams();
 
-  if (!exams || !exams.success) {
+  if (!exams) {
     return [];
   }
 
-  setSessionValue<MystatExam[]>(ctx, "exams", exams.data);
+  setSessionValue<Exam[]>(ctx, "exams", exams);
 
-  return exams.data.map((e) => formatString(e.spec));
+  return exams.map((e) => formatString(e.spec));
 };
 
 const allExamsEntrySubmenu = new MenuTemplate<any>(async (ctx) => {
   const match: string = ctx.match[1];
-  const exam = getSessionValue<MystatExam[]>(ctx, "exams").find(
+  const exam = getSessionValue<Exam[]>(ctx, "exams").find(
     (e) => formatString(e.spec) === match
   );
 

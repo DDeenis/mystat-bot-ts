@@ -1,8 +1,7 @@
 import Telegraf from "telegraf";
 import { createUser } from "./database/database.js";
-import MystatAPI from "mystat-api";
 import userStore from "./store/userStore.js";
-import { MystatUserData } from "mystat-api/dist/types.js";
+import { createClient } from "mystat-api";
 
 const Scenes = Telegraf.Scenes;
 const deunionize = Telegraf.deunionize;
@@ -39,35 +38,38 @@ const loginScene = new Scenes.WizardScene<Telegraf.Scenes.WizardContext>(
     ctx.deleteMessage(ctx.message?.message_id); // Deleting password so it won't be in chat history
     await ctx.reply("🔍 Обработка информации");
 
-    const userData: MystatUserData = {
+    const loginData = {
       username: (ctx as any).session.username,
       password: (ctx as any).session.password,
     };
-    const userApi = new MystatAPI(userData);
-    const authData = await userApi.authUser();
 
-    const isAuth = "access_token" in authData.data;
-    const chatId = ctx.chat?.id;
-    const userId = ctx.from?.id;
+    try {
+      const apiClient = await createClient({
+        loginData,
+        language: "ru",
+        cache: "force-cache",
+      });
 
-    if (!chatId || !userId) {
-      await ctx.reply("🚫 Что-то пошло не так.");
-      return await ctx.scene.leave();
-    }
+      const chatId = ctx.chat?.id;
+      const userId = ctx.from?.id;
 
-    if (!isAuth) {
-      await ctx.reply(
-        "🔒 При входе возникла ошибка. Проверьте логин и пароль."
-      );
-    } else {
+      if (!chatId || !userId) {
+        await ctx.reply("🚫 Что-то пошло не так.");
+        return await ctx.scene.leave();
+      }
+
       await ctx.reply("🔓 Вход успешно выполнен");
       await ctx.reply("Используйте /menu чтобы перейти в меню");
       await createUser({
-        username: userData.username,
-        password: userData.password,
+        username: loginData.username,
+        password: loginData.password,
         chatId,
       });
-      userStore.set(chatId, userData);
+      userStore.set(chatId, apiClient);
+    } catch (err) {
+      await ctx.reply(
+        "🔒 При входе возникла ошибка. Проверьте логин и пароль."
+      );
     }
 
     return await ctx.scene.leave();

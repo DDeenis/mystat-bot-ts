@@ -11,15 +11,15 @@ const futureExamsSubmenu = new MenuTemplate<Scenes.WizardContext>(
   async (ctx) => {
     const futureExams = await userStore.get(ctx.chat?.id)?.getFutureExams();
 
-    if (!futureExams || !futureExams.success) {
-      return getErrorMessage(futureExams?.error);
-    } else if (futureExams.data.length === 0) {
+    if (!futureExams) {
+      return getErrorMessage();
+    } else if (futureExams.length === 0) {
       return "🎉 У вас нет назначеных экзаменов";
     }
 
     let futureExamsFormatted = "";
 
-    for (const exam of futureExams.data) {
+    for (const exam of futureExams) {
       futureExamsFormatted += formatMessage(
         `✏️ Предмет: ${exam?.spec}`,
         `⏰ Дата: ${exam?.date}`

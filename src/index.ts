@@ -3,16 +3,13 @@ import dotenv from "dotenv";
 import scenes from "./scenes.js";
 import loginMiddleware from "./middleware/login.js";
 import { menuTemplate, menuMiddleware } from "./middleware/menu.js";
-import { setUserIfExist } from "./utils.js";
-import telegraf_inline from "telegraf-inline-menu";
+import { replyMenuToContext } from "telegraf-inline-menu";
 import userStore from "./store/userStore.js";
 import { setupCrashHandler } from "./helpers/crashHandler.js";
+import { setUserIfExist } from "./utils.js";
 
 setupCrashHandler();
 dotenv.config();
-const Scenes = Telegraf.Scenes;
-const session = Telegraf.session;
-const replyMenuToContext = telegraf_inline.replyMenuToContext;
 
 const token = process.env?.BOT_TOKEN;
 
@@ -22,12 +19,15 @@ if (!token) {
 
 const loginScene = scenes.login;
 
-const stage = new Scenes.Stage<Telegraf.Scenes.WizardContext>([loginScene], {
-  ttl: 360,
-});
+const stage = new Telegraf.Scenes.Stage<Telegraf.Scenes.WizardContext>(
+  [loginScene],
+  {
+    ttl: 360,
+  }
+);
 const bot = new Telegraf.Telegraf<Telegraf.Scenes.WizardContext>(token);
 
-bot.use(session());
+bot.use(Telegraf.session());
 bot.use(stage.middleware());
 bot.use(async (ctx, next) => {
   await setUserIfExist(ctx);
@@ -47,7 +47,7 @@ bot.start(async (ctx) => {
 });
 
 bot.inlineQuery([], async (a) => {
-  await Scenes.Stage.enter(a.callbackQuery ?? "");
+  await Telegraf.Scenes.Stage.enter(a.callbackQuery ?? "");
 });
 bot.on("callback_query", async (ctx) => {
   await replyMenuToContext(menuTemplate, ctx, (ctx.callbackQuery as any).data);

@@ -1,6 +1,5 @@
-import { MystatStudentInfo } from "mystat-api/dist/types.js";
+import { StudentInfo } from "mystat-api";
 import telegraf_inline from "telegraf-inline-menu";
-import { Context } from "vm";
 import { getErrorMessage } from "../../helpers/logger.js";
 import userStore from "../../store/userStore.js";
 import {
@@ -9,6 +8,7 @@ import {
   getSessionValue,
   setSessionValue,
 } from "../../utils.js";
+import { Context, deunionize } from "telegraf";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
@@ -20,19 +20,19 @@ const formatStudentName = (source: string) => cropString(source, 24);
 const getStudents = async (ctx: Context): Promise<string[]> => {
   const students = await userStore.get(ctx.chat?.id)?.getGroupLeaders();
 
-  if (!students || !students.success) {
-    console.log(students?.error);
+  if (!students) {
+    console.log("Failed to get students");
     return [];
   }
 
-  setSessionValue<MystatStudentInfo[]>(ctx, studentsField, students.data);
+  setSessionValue<StudentInfo[]>(ctx, studentsField, students);
 
-  return students.data.map((s) => formatStudentName(s.full_name));
+  return students.map((s) => formatStudentName(s.full_name));
 };
 
 const studentSubmenu = new MenuTemplate<Context>(async (ctx) => {
-  const match = ctx.match[1];
-  const students = getSessionValue<MystatStudentInfo[]>(ctx, studentsField);
+  const match = deunionize<any>(ctx).match[1];
+  const students = getSessionValue<StudentInfo[]>(ctx, studentsField);
   const student = students.find(
     (s) => formatStudentName(s.full_name) === match
   );

@@ -6,8 +6,6 @@ import allExamsSubmenu from "./submenu/allExams.js";
 import futureExamsSubmenu from "./submenu/futureExams.js";
 import groupSubmenu from "./submenu/group.js";
 import homeworkSubmenu from "./submenu/homework.js";
-// import newsSubmenu from "./submenu/news.js";
-// import personalInfoSubmenu from "./submenu/personalInfo.js";
 import botInfoSubmenu from "./submenu/botInfo.js";
 import {
   monthScheduleSubmenu,

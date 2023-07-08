@@ -1,15 +1,16 @@
-import MystatAPI from "mystat-api";
-import { MystatUserData } from "mystat-api/dist/types";
+import ApiClient from "mystat-api";
+import { createClient } from "mystat-api";
 import { ConsoleLogger } from "../helpers/logger.js";
 
 type ChatId = number;
+type ApiClient = Awaited<ReturnType<typeof createClient>>;
 
 export class UserStore {
-  users: Map<ChatId, MystatAPI>;
+  users: Map<ChatId, ApiClient>;
   logger: ConsoleLogger;
 
   constructor() {
-    this.users = new Map<ChatId, MystatAPI>();
+    this.users = new Map<ChatId, ApiClient>();
     this.logger = new ConsoleLogger("[STORE]");
   }
 
@@ -27,10 +28,8 @@ export class UserStore {
     return this.users.get(chatId);
   }
 
-  set(chatId: ChatId, userData: MystatUserData) {
+  async set(chatId: ChatId, api: ApiClient) {
     this.logger.log("Create user with chatId: " + chatId);
-    const api = new MystatAPI(userData);
-    api._updateAccessToken();
     this.users.set(chatId, api);
   }
 

@@ -11,13 +11,12 @@ import {
   getDayOfWeekShort,
   getMonthName,
 } from "../../helpers/schedule.js";
-import { MystatResponse, MystatScheduleEntry } from "mystat-api/dist/types.js";
+import { ScheduleEntry } from "mystat-api";
 import { getErrorMessage } from "../../helpers/logger.js";
 
 const createBackMainMenuButtons = telegraf_inline.createBackMainMenuButtons;
 const MenuTemplate = telegraf_inline.MenuTemplate;
 
-// const newmsgSymbol = "!new";
 const nextMsgSymbol = "\n";
 const maxMsgLength = 4250;
 const dateFormatOptions: Intl.DateTimeFormatOptions = {
@@ -36,7 +35,7 @@ const formatDate = (
     .slice(0, -1);
 };
 
-const formatSchedule = (scheduleEntry: MystatScheduleEntry) => {
+const formatSchedule = (scheduleEntry: ScheduleEntry) => {
   return formatMessage(
     `✏️ Предмет: ${scheduleEntry?.subject_name.replace(/[\\[\]]/g, "")}`,
     `💡 Преподаватель: ${scheduleEntry?.teacher_name}`,
@@ -53,14 +52,14 @@ const getScheduleFormatted = async (
   const schedule = await userStore.get(ctx.chat?.id)?.getScheduleByDate(date);
   let scheduleFormatted = "";
 
-  if (!schedule || !schedule.success) {
-    return getErrorMessage(schedule?.error);
-  } else if (schedule.data.length === 0) {
+  if (!schedule) {
+    return getErrorMessage("Unauthorized");
+  } else if (schedule.length === 0) {
     return "🎉 Нет пар";
   }
 
   // sort items by start time
-  const scheduleItems = schedule.data.sort((a, b) => {
+  const scheduleItems = schedule.sort((a, b) => {
     const dateA = Date.parse(`01 Jan 1970 ${a.started_at}:00 GMT`);
     const dateB = Date.parse(`01 Jan 1970 ${b.started_at}:00 GMT`);
     return dateA - dateB;
@@ -94,25 +93,22 @@ const getWeekScheduleMarkdown = async (
   const api = userStore.get(ctx.chat?.id);
   const weekDays = getCurrentWeek();
 
-  const daysPromises: (
-    | Promise<MystatResponse<MystatScheduleEntry[]>>
-    | undefined
-  )[] = [];
+  const daysPromises: (Promise<ScheduleEntry[] | undefined> | undefined)[] = [];
   for (const day of weekDays) {
     daysPromises.push(api?.getScheduleByDate(new Date(day)));
   }
   const results = await Promise.all(daysPromises);
-  const errorResult = results.find((r) => !r?.success);
+  const errorResult = results.find((r) => !r);
 
   if (errorResult) {
-    return getErrorMessage(errorResult.error);
+    return getErrorMessage();
   } else if (results.length === 0) {
     return "🎉 Нет пар";
   }
 
-  const schedule = results.flatMap((r) => r?.data as MystatScheduleEntry[]);
+  const schedule = results.flatMap((r) => r ?? []);
 
-  const scheduleWeekDays = new Map<string, MystatScheduleEntry[]>();
+  const scheduleWeekDays = new Map<string, ScheduleEntry[]>();
   for (const dayOfWeek of weekDays) {
     const scheduleEntries = schedule.filter((s) => s.date === dayOfWeek);
     scheduleWeekDays.set(dayOfWeek, scheduleEntries);
@@ -159,8 +155,8 @@ const getDaysArray = async (
   const days: string[] = [];
   const schedule = await userStore.get(ctx.chat?.id)?.getMonthSchedule(date);
 
-  if (!schedule || !schedule.success) {
-    ctx.sendMessage(getErrorMessage(schedule?.error));
+  if (!schedule) {
+    ctx.sendMessage(getErrorMessage());
     return [];
   }
 
@@ -181,7 +177,7 @@ const getDaysArray = async (
 
     const currentDate = formatDate(dateCopy);
 
-    if (schedule?.data.some((elem) => elem.date === currentDate)) {
+    if (schedule.some((elem) => elem.date === currentDate)) {
       days.push("🟢" + String(count + 1));
     } else {
       days.push("🔴" + String(count + 1));
