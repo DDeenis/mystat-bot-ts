@@ -12,8 +12,8 @@ dependencies:
     specifier: ^10.0.0
     version: 10.0.0
   mystat-api:
-    specifier: ^4.0.1
-    version: 4.0.1
+    specifier: ^4.0.4
+    version: 4.0.4
   telegraf:
     specifier: ^4.12.2
     version: 4.12.2
@@ -957,8 +957,8 @@ packages:
   /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
 
-  /mystat-api@4.0.1:
-    resolution: {integrity: sha512-0KXGQbHso+5YQAHuIwuSMB+XmsepNdHZ0qM+Wr+SJtQMI5TpQtTY2vtXRek/+JDi7BEgB3yPdmKV8U8346g6eg==}
+  /mystat-api@4.0.4:
+    resolution: {integrity: sha512-ONBsCJ4Ltvlq1HBRh5tUubrOOMJYN8tpWRBKQE0FSUalTY887QbYKWotsHWEdnSmEKn3LnLBxVxKbfuQPY0w+Q==}
     dev: false
 
   /natural-compare-lite@1.4.0:

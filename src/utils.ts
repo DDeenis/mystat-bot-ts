@@ -46,10 +46,24 @@ export async function setUserIfExist(
     userStore.set(
       chatId,
       await createClient({
-        loginData: user,
+        loginData: {
+          username: user.username,
+          password: user.password,
+        },
         language: "ru",
         cache: "force-cache",
       })
     );
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function debounce(func: Function, timeout = 300) {
+  let timer: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.call(args);
+    }, timeout);
+  };
 }

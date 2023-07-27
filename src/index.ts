@@ -4,9 +4,9 @@ import scenes from "./scenes.js";
 import loginMiddleware from "./middleware/login.js";
 import { menuTemplate, menuMiddleware } from "./middleware/menu.js";
 import { replyMenuToContext } from "telegraf-inline-menu";
-import userStore from "./store/userStore.js";
+import userStore, { loadStoreData, saveUsersData } from "./store/userStore.js";
 import { setupCrashHandler } from "./helpers/crashHandler.js";
-import { setUserIfExist } from "./utils.js";
+import { setUserIfExist, debounce } from "./utils.js";
 
 setupCrashHandler();
 dotenv.config();
@@ -16,6 +16,16 @@ const token = process.env?.BOT_TOKEN;
 if (!token) {
   throw new Error("Bot token is not provided");
 }
+
+const saveDebounced = debounce(saveUsersData, 5000);
+
+loadStoreData();
+userStore.onStoreChange = saveUsersData;
+userStore.onGetUser = (api?: any) => {
+  if (api) {
+    saveDebounced();
+  }
+};
 
 const loginScene = scenes.login;
 

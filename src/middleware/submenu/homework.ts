@@ -1,4 +1,4 @@
-import { Homework, HomeworkStatus } from "mystat-api";
+import { Homework, HomeworkStatus, HomeworkType } from "mystat-api";
 import telegraf_inline from "telegraf-inline-menu";
 import { Scenes } from "telegraf";
 import userStore from "../../store/userStore.js";
@@ -38,12 +38,11 @@ const homeworkStatusTitles = {
 async function getHomeworksByMatch(ctx: any): Promise<Homework[]> {
   const match: string = ctx.match[1];
   const homeworkStatus = homeworkStatusTitles[match as HomeworkStatusTypes];
-  const homeworks = await userStore
-    .get(ctx.chat?.id)
-    ?.getHomeworkList(
-      homeworkStatus,
-      getSessionValue<number>(ctx, "page") || 1
-    );
+  const homeworks = await userStore.get(ctx.chat?.id)?.getHomeworkList({
+    page: getSessionValue<number>(ctx, "page") || 1,
+    status: homeworkStatus,
+    type: HomeworkType.Homework,
+  });
   setSessionValue<Homework[]>(ctx, "homeworks", homeworks ?? []);
 
   return homeworks ?? [];

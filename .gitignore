@@ -6,3 +6,4 @@ ref
 # files
 .env
 err.txt
+users.cache
