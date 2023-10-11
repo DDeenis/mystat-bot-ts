@@ -17,7 +17,7 @@ const studentsField = "students";
 
 const formatStudentName = (source: string) => cropString(source, 24);
 
-const getStudents = async (ctx: Context): Promise<string[]> => {
+const getStudents = async (ctx: Context) => {
   const students = await userStore.get(ctx.chat?.id)?.getGroupLeaders();
 
   if (!students) {
@@ -27,15 +27,18 @@ const getStudents = async (ctx: Context): Promise<string[]> => {
 
   setSessionValue<StudentInfo[]>(ctx, studentsField, students);
 
-  return students.map((s) => formatStudentName(s.full_name));
+  const fullNames = students.map((s) => formatStudentName(s.full_name));
+  const sudmenuMap: Record<number, string> = {};
+  for (let i = 0; i < fullNames.length; i++) {
+    sudmenuMap[i] = fullNames[i];
+  }
+  return sudmenuMap;
 };
 
 const studentSubmenu = new MenuTemplate<Context>(async (ctx) => {
-  const match = deunionize<any>(ctx).match[1];
+  const match = deunionize<any>(ctx).match[1] as number;
   const students = getSessionValue<StudentInfo[]>(ctx, studentsField);
-  const student = students.find(
-    (s) => formatStudentName(s.full_name) === match
-  );
+  const student = students[match];
 
   if (!student) {
     return getErrorMessage("Not found");
@@ -58,12 +61,9 @@ const studentSubmenu = new MenuTemplate<Context>(async (ctx) => {
 studentSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
 const groupSubmenu = new MenuTemplate<Context>(() => "Список группы");
-groupSubmenu.chooseIntoSubmenu(
-  "lst",
-  async (ctx) => await getStudents(ctx),
-  studentSubmenu,
-  { columns: 2 }
-);
+groupSubmenu.chooseIntoSubmenu("lst", getStudents, studentSubmenu, {
+  columns: 2,
+});
 groupSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
 export default groupSubmenu;
