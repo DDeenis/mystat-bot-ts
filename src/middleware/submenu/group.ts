@@ -21,7 +21,7 @@ const getStudents = async (ctx: Context) => {
   const students = await userStore.get(ctx.chat?.id)?.getGroupLeaders();
 
   if (!students) {
-    console.log("Failed to get students");
+    console.error("Failed to get students");
     return [];
   }
 

@@ -36,7 +36,7 @@ export const isUserExist = async (chatId: number): Promise<boolean> => {
     const result = await getUserByChatId(chatId);
     return Boolean(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   return false;

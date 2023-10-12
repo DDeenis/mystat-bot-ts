@@ -38,6 +38,7 @@ const homeworkStatusTitles = {
 async function getHomeworksByMatch(ctx: any): Promise<Homework[]> {
   const match: string = ctx.match[1];
   const homeworkStatus = homeworkStatusTitles[match as HomeworkStatusTypes];
+
   const homeworks = await userStore.get(ctx.chat?.id)?.getHomeworkList({
     page: getSessionValue<number>(ctx, "page") || 1,
     status: homeworkStatus,
@@ -56,67 +57,50 @@ selectedHomeworkSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад")
 const selectedHomeworkListSubmenu = new MenuTemplate<any>(
   (ctx) => ctx.match[1]
 );
-selectedHomeworkListSubmenu.manualRow(async (ctx: Scenes.WizardContext) => {
-  const homeworks = await getHomeworksByMatch(ctx);
-  setSessionValue<number>(ctx, "page", 0);
 
-  const format = (h: Homework) => ({
-    text: h.name_spec,
-    relativePath: h.id.toString(),
-  });
+const homeworkInfoSubmenu = new MenuTemplate<any>(async (ctx) => {
+  const index: number = ctx.match[2];
+  const homework = getSessionValue<Homework[]>(ctx, "homeworks")?.[index];
 
-  return [
-    homeworks.slice(0, 2).map((h) => format(h)),
-    homeworks.slice(2, 4).map((h) => format(h)),
-    homeworks.slice(4, 6).map((h) => format(h)),
-  ];
+  return await formatMessage(
+    `✏️ Предмет: ${homework?.name_spec}`,
+    `📖 Тема: ${homework?.theme}`,
+    `💡 Преподаватель: ${homework?.fio_teach}`,
+    `📅 Дата выдачи: ${homework?.creation_time}`,
+    `❕ Сдать до: ${homework?.completion_time}`,
+    `✒️ Комментарий: ${homework?.comment}`,
+    `📁 Путь к файлу: ${homework?.file_path}`,
+    `📂 Путь к загруженному файлу: ${
+      homework?.homework_stud?.file_path || "Нет ссылки"
+    }`,
+    `✅ Проверенно: ${
+      homework?.homework_stud?.creation_time || "Нет информации"
+    }`,
+    `🎉 Оценка: ${homework?.homework_stud?.mark || "Нет информации"}`
+  );
 });
+homeworkInfoSubmenu.manualRow(createBackMainMenuButtons("⬅️ Назад"));
 
-selectedHomeworkListSubmenu.manualAction(
-  /(\d+)$/,
-  async (ctx: any, path: string) => {
-    const parts: string[] = path.split("/");
-    const id: number = parseInt(parts[parts.length - 1]);
-    const currentPath: string = ctx.update.callback_query.data;
-    const idStartPos = currentPath.lastIndexOf(":");
-    const homeworkMenuPath = currentPath.substring(0, idStartPos);
+selectedHomeworkListSubmenu.chooseIntoSubmenu(
+  "hwi",
+  async (ctx: Scenes.WizardContext) => {
+    const homeworks = await getHomeworksByMatch(ctx);
 
-    const homework = getSessionValue<Homework[]>(ctx, "homeworks")?.find(
-      (h) => h.id === id
-    );
-
-    await ctx.editMessageText(
-      formatMessage(
-        `✏️ Предмет: ${homework?.name_spec}`,
-        `📖 Тема: ${homework?.theme}`,
-        `💡 Преподаватель: ${homework?.fio_teach}`,
-        `📅 Дата выдачи: ${homework?.creation_time}`,
-        `❕ Сдать до: ${homework?.completion_time}`,
-        `✒️ Комментарий: ${homework?.comment}`,
-        `📁 Путь к файлу: ${homework?.file_path}`,
-        `📂 Путь к загруженному файлу: ${
-          homework?.homework_stud?.file_path || "Нет ссылки"
-        }`,
-        `✅ Проверенно: ${
-          homework?.homework_stud?.creation_time || "Нет информации"
-        }`,
-        `🎉 Оценка: ${homework?.homework_stud?.mark || "Нет информации"}`
-      )
-    );
-
-    ctx.editMessageReplyMarkup({
-      inline_keyboard: [
-        [
-          {
-            text: "⬅️ Назад",
-            callback_data: homeworkMenuPath,
-          },
-        ],
-      ],
+    const homeworksFormatted = homeworks.map((h) => {
+      const creationTime = new Date(h.creation_time);
+      return `${creationTime.getDate()}.${creationTime.getMonth() + 1}: ${
+        h.name_spec
+      }`;
     });
+    const submenuMap: Record<number, string> = {};
+    for (let i = 0; i < homeworksFormatted.length; i++) {
+      submenuMap[i] = homeworksFormatted[i];
+    }
 
-    return false;
-  }
+    return submenuMap;
+  },
+  homeworkInfoSubmenu,
+  { columns: 2 }
 );
 
 selectedHomeworkListSubmenu.pagination("hw-pg", {
