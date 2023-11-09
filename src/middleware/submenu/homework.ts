@@ -44,9 +44,9 @@ async function getHomeworksByMatch(ctx: any): Promise<Homework[]> {
     status: homeworkStatus,
     type: HomeworkType.Homework,
   });
-  setSessionValue<Homework[]>(ctx, "homeworks", homeworks ?? []);
+  setSessionValue<Homework[]>(ctx, "homeworks", homeworks?.data ?? []);
 
-  return homeworks ?? [];
+  return homeworks?.data ?? [];
 }
 
 const selectedHomeworkSubmenu = new MenuTemplate<any>((ctx) => {
