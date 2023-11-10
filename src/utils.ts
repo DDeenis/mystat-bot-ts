@@ -26,13 +26,16 @@ export function formatMessage(...parts: string[]): string {
 export const cropString = (source: string, end: number): string =>
   source.length > end ? source.substring(0, end) + "…" : source;
 
-export async function setUserIfExist(
+export async function setUserOrUpdateToken(
   ctx: Scenes.WizardContext
 ): Promise<string | undefined> {
   const chatId = ctx.chat?.id;
-  const userData = userStore.get(chatId)?.clientData.loginData;
+  const apiClient = userStore.get(chatId);
 
-  if (userData?.username && userData?.password) {
+  if (apiClient) {
+    if (apiClient.isTokenExpired()) {
+      await apiClient.updateToken();
+    }
     return;
   }
 

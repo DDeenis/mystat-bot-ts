@@ -1,31 +1,30 @@
 import Telegraf from "telegraf";
-import dotenv from "dotenv";
 import scenes from "./scenes.js";
 import loginMiddleware from "./middleware/login.js";
 import { menuTemplate, menuMiddleware } from "./middleware/menu.js";
 import { replyMenuToContext } from "telegraf-inline-menu";
 import userStore, { loadStoreData, saveUsersData } from "./store/userStore.js";
 import { setupCrashHandler } from "./helpers/crashHandler.js";
-import { setUserIfExist, debounce } from "./utils.js";
+import { setUserOrUpdateToken, debounce } from "./utils.js";
+import { env } from "./env.js";
 
 setupCrashHandler();
-dotenv.config();
 
-const token = process.env?.BOT_TOKEN;
-
-if (!token) {
-  throw new Error("Bot token is not provided");
-}
+const token = env.BOT_TOKEN;
 
 const saveDebounced = debounce(saveUsersData, 5000);
 
-loadStoreData();
-userStore.onStoreChange = saveUsersData;
-userStore.onGetUser = (api?: any) => {
-  if (api) {
-    saveDebounced();
-  }
-};
+if (env.ENABLE_USERS_CACHE) {
+  loadStoreData();
+  userStore.onStoreChange = saveUsersData;
+  userStore.onGetUser = (api?: any) => {
+    if (api) {
+      saveDebounced();
+    }
+  };
+} else {
+  console.log("Users cache disabled, skipping");
+}
 
 const loginScene = scenes.login;
 
@@ -40,7 +39,7 @@ const bot = new Telegraf.Telegraf<Telegraf.Scenes.WizardContext>(token);
 bot.use(Telegraf.session());
 bot.use(stage.middleware());
 bot.use(async (ctx, next) => {
-  await setUserIfExist(ctx);
+  await setUserOrUpdateToken(ctx);
   await next();
 });
 bot.use(loginMiddleware);

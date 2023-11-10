@@ -8,6 +8,9 @@ dependencies:
   '@supabase/supabase-js':
     specifier: ^2.38.4
     version: 2.38.4
+  '@t3-oss/env-core':
+    specifier: ^0.7.1
+    version: 0.7.1(typescript@5.2.2)(zod@3.22.4)
   dotenv:
     specifier: ^10.0.0
     version: 10.0.0
@@ -20,6 +23,9 @@ dependencies:
   telegraf-inline-menu:
     specifier: ^6.3.0
     version: 6.3.0(telegraf@4.15.0)
+  zod:
+    specifier: ^3.22.4
+    version: 3.22.4
 
 devDependencies:
   '@types/html-to-text':
@@ -380,6 +386,19 @@ packages:
       '@supabase/storage-js': 2.5.4
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@t3-oss/env-core@0.7.1(typescript@5.2.2)(zod@3.22.4):
+    resolution: {integrity: sha512-3+SQt39OlmSaRLqYVFv8uRm1BpFepM5TIiMytRqO9cjH+wB77o6BIJdeyM5h5U4qLBMEzOJWCY4MBaU/rLwbYw==}
+    peerDependencies:
+      typescript: '>=4.7.2'
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.2.2
+      zod: 3.22.4
     dev: false
 
   /@telegraf/types@6.9.1:
@@ -1499,7 +1518,6 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
@@ -1568,3 +1586,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
