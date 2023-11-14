@@ -22,33 +22,33 @@ export const menuTemplate = new MenuTemplate<Scenes.WizardContext>(
 );
 
 menuTemplate.submenu(
-  "🗓Расписание на сегодня",
+  "🗓 Расписание на сегодня",
   "schedule-today",
   scheduleTodaySubmenu
 );
 menuTemplate.submenu(
-  "🗓Расписание на завтра",
+  "🗓 Расписание на завтра",
   "schedule-tomorrow",
   scheduleTomorrowSubmenu
 );
 menuTemplate.submenu(
-  "📅Расписание на неделю",
+  "📅 Расписание на неделю",
   "schedule-week",
   scheduleWeekSubmenu
 );
 menuTemplate.submenu(
-  "📅Расписание на месяц",
+  "📅 Расписание на месяц",
   "schedule-month",
   monthScheduleSubmenu
 );
-menuTemplate.submenu("✉️Домашние задания", "hw", homeworkSubmenu);
+menuTemplate.submenu("✉️ Домашние задания", "hw", homeworkSubmenu);
 menuTemplate.submenu("🕯Будущие экзамены", "future-exams", futureExamsSubmenu);
-menuTemplate.submenu("⚰️Все экзамены", "all-exams", allExamsSubmenu);
+menuTemplate.submenu("⚰️ Все экзамены", "all-exams", allExamsSubmenu);
 // menuTemplate.submenu("📄Новости", "news", newsSubmenu);
-menuTemplate.submenu("⛏Группа", "grp", groupSubmenu);
+menuTemplate.submenu("⛏ Группа", "grp", groupSubmenu);
 // menuTemplate.submenu("🖨Информация о себе", "p-info", personalInfoSubmenu);
-menuTemplate.submenu("🤡О боте", "bot-info", botInfoSubmenu);
-menuTemplate.interact("🚪Выйти", "logout", {
+menuTemplate.submenu("🤡 О боте", "bot-info", botInfoSubmenu);
+menuTemplate.interact("🚪 Выйти", "logout", {
   do: async (ctx) => {
     const chatId = ctx.chat?.id;
 

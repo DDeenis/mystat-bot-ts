@@ -4,7 +4,6 @@ export const setupCrashHandler = (logName = "err.txt") => {
   process.on("uncaughtException", (signal) => {
     appendFileSync(logName, signal.message + "\n", { encoding: "utf8" });
     console.error(signal);
-    process.exit(0);
   });
 
   process.on("unhandledRejection", (signal) => {
@@ -12,7 +11,6 @@ export const setupCrashHandler = (logName = "err.txt") => {
       encoding: "utf8",
     });
     console.error(signal);
-    process.exit(0);
   });
 
   process.on("SIGTERM", () => {
