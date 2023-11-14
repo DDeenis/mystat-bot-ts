@@ -1,8 +1,7 @@
 import Telegraf from "telegraf";
 import scenes from "./scenes.js";
 import loginMiddleware from "./middleware/login.js";
-import { menuTemplate, menuMiddleware } from "./middleware/menu.js";
-import { replyMenuToContext } from "telegraf-inline-menu";
+import { menuMiddleware } from "./middleware/menu.js";
 import userStore, { loadStoreData, saveUsersData } from "./store/userStore.js";
 import { setupCrashHandler } from "./helpers/crashHandler.js";
 import { setUserOrUpdateToken, debounce } from "./utils.js";
@@ -53,13 +52,6 @@ bot.start(async (ctx) => {
   return await (userLogged
     ? menuMiddleware.replyToContext(ctx)
     : loginMiddleware.replyToContext(ctx));
-});
-
-bot.inlineQuery([], async (a) => {
-  await Telegraf.Scenes.Stage.enter(a.callbackQuery ?? "");
-});
-bot.on("callback_query", async (ctx) => {
-  await replyMenuToContext(menuTemplate, ctx, (ctx.callbackQuery as any).data);
 });
 
 bot.launch();

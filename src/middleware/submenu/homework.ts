@@ -19,13 +19,13 @@ enum HomeworkStatusTypes {
   Deleted = "🗑 Удаленные",
 }
 
-const homeworkStatusList = {
-  [HomeworkStatus.Active]: HomeworkStatusTypes.Active,
-  [HomeworkStatus.Checked]: HomeworkStatusTypes.Checked,
-  [HomeworkStatus.Uploaded]: HomeworkStatusTypes.Uploaded,
-  [HomeworkStatus.Overdue]: HomeworkStatusTypes.Overdue,
-  [HomeworkStatus.Deleted]: HomeworkStatusTypes.Deleted,
-};
+const homeworkStatusList = [
+  HomeworkStatusTypes.Active,
+  HomeworkStatusTypes.Checked,
+  HomeworkStatusTypes.Uploaded,
+  HomeworkStatusTypes.Overdue,
+  HomeworkStatusTypes.Deleted,
+];
 
 const homeworkStatusTitles = {
   [HomeworkStatusTypes.Active]: HomeworkStatus.Active,
